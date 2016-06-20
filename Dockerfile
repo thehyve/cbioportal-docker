@@ -23,26 +23,6 @@ ENV PORTAL_HOME=/cbioportal
 RUN git clone --single-branch -b v1.2.4 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
-#RUN git fetch https://github.com/thehyve/cbioportal.git uniprot_accession_in_maf_rebased \
-#       && git checkout FETCH_HEAD
-
-# add buildtime configuration
-COPY ./portal.properties.patch /root/
-
-# install default config files, build and install
-RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
-	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
-	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
-	&& mvn -DskipTests clean install \
-	&& mv portal/target/cbioportal.war $CATALINA_HOME/webapps/
-
-# add runtime configuration
-COPY ./catalina_server.xml.patch /root/
-RUN patch $CATALINA_HOME/conf/server.xml </root/catalina_server.xml.patch
-COPY ./catalina_context.xml.patch /root/
-RUN patch $CATALINA_HOME/conf/context.xml </root/catalina_context.xml.patch
-
-# add importer scripts to PATH for easy running in containers
-RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
-# TODO: fix the workdir-dependent references to '../scripts/env.pl' and do this:
-# RUN find $PWD/core/src/main/scripts/ -type f -executable \! \( -name env.pl -o -name envSimple.pl \)  -print0 | xargs -0 -- ln -st /usr/local/bin
+# include the entrypoint script to build based on runtime context
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]

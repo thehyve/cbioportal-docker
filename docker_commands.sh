@@ -31,15 +31,23 @@ docker run -it --rm \
 docker run --rm \
     -p 8000:8000 \
     -p 8080:8080 \
+    -e JPDA_ADDRESS=0.0.0.0:8000 \
     -v "$HOME"/cbioportal:/cbioportal \
     --net=cbio-net \
     --name=cbioportal-dev \
     <image> \
-    sh -c 'mvn -DskipTests clean install && mv portal/target/cbioportal.war "$CATALINA_HOME"/webapps/ && JPDA_ADDRESS=0.0.0.0:8000 exec catalina.sh jpda run'
+    catalina.sh jpda run
 
 docker run --rm \
     -p 8081:8080 \
+    -e CBIO_GIT_BRANCH=rc \
     --net=cbio-net \
     --name=cbioportal-test \
-    <image> \
-    sh -c 'git fetch origin rc && git checkout FETCH_HEAD && mvn -DskipTests clean install && mv portal/target/cbioportal.war "$CATALINA_HOME"/webapps/ && exec catalina.sh run'
+    <image>
+
+# testing:
+docker run -p 8083:8080 --net='cbio-net' --name='cbio_testentrypoint' \
+    -v "$PWD"/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro \
+    -v "$PWD"/portal.properties.patch:/portal_config/portal.properties.patch:ro \
+    fschaeffer/cbioportal-configured \
+    sh -c 'rm src/main/resources/portal.properties && docker-entrypoint.sh catalina.sh run'
