@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		libmysql-java \
 		maven \
 		openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
+		patch \
 		python \
 		python-jinja2 \
 		python-mysqldb \
@@ -17,16 +18,28 @@ RUN ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone -b v1.1.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN git clone --single-branch -b v1.2.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
+#RUN git fetch https://github.com/thehyve/cbioportal.git uniprot_accession_in_maf_rebased \
+#       && git checkout FETCH_HEAD
+
+# add buildtime configuration
+COPY ./portal.properties.patch /root/
+
 # install default config files, build and install
-RUN mv src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
-	&& mv src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
+RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
+	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
+	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
 	&& mv portal/target/cbioportal.war $CATALINA_HOME/webapps/
 
+# add runtime configuration
+COPY ./catalina_context.xml.patch /root/
+RUN patch $CATALINA_HOME/conf/context.xml </root/catalina_context.xml.patch
+COPY ./maven_settings.xml /root/.m2/settings.xml
+
 # add importer scripts to PATH for easy running in containers
-# TODO: fix the references to '../scripts/env.pl' and do this:
+RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
+# TODO: fix the workdir-dependent references to '../scripts/env.pl' and do this:
 # RUN find $PWD/core/src/main/scripts/ -type f -executable \! \( -name env.pl -o -name envSimple.pl \)  -print0 | xargs -0 -- ln -st /usr/local/bin
-ENV PATH=$PORTAL_HOME/core/src/main/scripts/importer:$PATH

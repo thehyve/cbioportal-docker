@@ -1,0 +1,70 @@
+--- portal.properties.EXAMPLE
++++ portal.properties
+@@ -3,24 +3,22 @@
+ app.version=1.0
+ 
+ # database
+-db.user=cbio_user
+-db.password=somepassword
+-db.host=localhost
++db.user=cbio
++db.password=P@ssword1
++db.host=cbioDB
+ db.portal_db_name=cbioportal
+ db.driver=com.mysql.jdbc.Driver
+-db.connection_string=jdbc:mysql://localhost/
++db.connection_string=jdbc:mysql://cbioDB/
+ db.tomcat_resource_name=jdbc/cbioportal
+ # this is the *expected* DB version (expected by the code). Don't set it manually, it is filled by maven:
+ db.version=${db.version}
+ 
+ # web page cosmetics
+-skin.title=cBioPortal for Cancer Genomics
++skin.title=Local cBioPortal instance
+ skin.email_contact=cbioportal at googlegroups dot com
+-skin.blurb=The cBioPortal for Cancer Genomics provides <b>visualization</b>, <b>analysis</b> and <b>download</b> of large-scale cancer genomics data sets.  <p>Please adhere to <u><a href=\"http://cancergenome.nih.gov/abouttcga/policies/publicationguidelines\"> the TCGA publication guidelines</a></u> when using TCGA data in your publications.</p> <p><b>Please cite</b> <a href=\"http://www.ncbi.nlm.nih.gov/pubmed/23550210\">Gao et al. <i>Sci. Signal.</i> 2013</a> &amp;  <a href=\"http://cancerdiscovery.aacrjournals.org/content/2/5/401.abstract\"> Cerami et al. <i>Cancer Discov.</i> 2012</a> when publishing results based on cBioPortal.</p>
+-skin.authorization_message=Access to this portal is only available to authorized users at Memorial Sloan Kettering Cancer Center.  [<a href="http://bit.ly/ZevaHa">Request Access</a>].
+-skin.right_nav.show_testimonials=true
++skin.authorization_message=Access to this portal is only available to authorized users.
+ skin.data_sets_header=The portal currently contains data from the following cancer genomics studies.  The table below lists the number of available samples per data type and tumor.
+-skin.data_sets_footer=Data sets of TCGA studies were downloaded from Broad Firehose (http://gdac.broadinstitute.org) and updated monthly. In some studies, data sets were from the TCGA working groups directly.
++skin.data_sets_footer=
+ skin.examples_right_column=examples.html
+ 
+ # documentation pages
+@@ -55,10 +53,10 @@
+ skin.footer= | <a href="http://www.mskcc.org/mskcc/html/44.cfm">MSKCC</a> | <a href="http://cancergenome.nih.gov/">TCGA</a>
+ 
+ # setting controlling html for the contact
+-skin.login.contact_html=If you think you have received this message in error, please contact us at <a style="color:#FF0000" href="mailto:cbioportal-access@cbio.mskcc.org">cbioportal-access@cbio.mskcc.org</a>
++skin.login.contact_html=If you think you have received this message in error, please contact us
+ 
+ # setting controlling the saml registration
+-skin.login.saml.registration_html=Sign in with MSK
++skin.login.saml.registration_html=Sign in
+ 
+ # setting controlling which tabs to hide/show in the patient view
+ skin.patient_view.show_clinical_trials_tab=true
+@@ -115,11 +113,11 @@
+ patient_view_genomic_overview_cna_cutoff=0.2,1.5
+ digitalslidearchive.iframe.url=http://cancer.digitalslidearchive.net/index_mskcc.php?slide_name=
+ digitalslidearchive.meta.url=http://cancer.digitalslidearchive.net/local_php/get_slide_list_from_db_groupid_not_needed.php?slide_name_filter=
+-tumor_image.url=http://cbio.mskcc.org/cancergenomics/tcga-tumor-images/
++tumor_image.url=
+ tcga_path_report.url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/{cancer.type}/bcr/nationwidechildrens.org/pathology_reports/reports/
+ 
+ # various url's
+-segfile.url=http://cbio.mskcc.org/cancergenomics/gdac-portal/seg/
++segfile.url=
+ 
+ # Enable OncoKB annotation
+ oncokb.url=
+@@ -145,7 +143,7 @@
+ pathway_commons.url=http://www.pathwaycommons.org/pc2
+ 
+ # bitly, please use your bitly user and apiKey
+-bitly.url=http://api.bit.ly/shorten?login=[bitly.user]&apiKey=[bitly.apiKey]&
++bitly.url=
+ 
+ # pdb url
+ pdb.database.url=http://rcsb.org/pdb/files/

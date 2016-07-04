@@ -1,0 +1,9 @@
+<settings>
+  <servers>
+    <server>
+      <id>settingsKey</id>
+      <username>cbio_user</username>
+      <password>somepassword</password>
+    </server>
+  </servers>
+</settings>
