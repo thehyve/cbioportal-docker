@@ -37,7 +37,6 @@ RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.pr
 # add runtime configuration
 COPY ./catalina_context.xml.patch /root/
 RUN patch $CATALINA_HOME/conf/context.xml </root/catalina_context.xml.patch
-COPY ./maven_settings.xml /root/.m2/settings.xml
 
 # add importer scripts to PATH for easy running in containers
 RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
