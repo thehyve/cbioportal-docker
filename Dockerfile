@@ -12,9 +12,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python-jinja2 \
 		python-mysqldb \
 		python-requests \
-	&& rm -rf /var/lib/apt/lists/*
-# set up Tomcat to use the MySQL Connector/J Java connector
-RUN ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/
+	&& rm -rf /var/lib/apt/lists/* \
+	# set up Tomcat to use the MySQL Connector/J Java connector
+	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
+	# remove the example apps that come with Tomcat for security reasons
+	&& rm -rf $CATALINA_HOME/webapps/examples/
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
