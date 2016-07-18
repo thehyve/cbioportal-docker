@@ -35,6 +35,8 @@ RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.pr
 	&& mv portal/target/cbioportal.war $CATALINA_HOME/webapps/
 
 # add runtime configuration
+COPY ./catalina_server.xml.patch /root/
+RUN patch $CATALINA_HOME/conf/server.xml </root/catalina_server.xml.patch
 COPY ./catalina_context.xml.patch /root/
 RUN patch $CATALINA_HOME/conf/context.xml </root/catalina_context.xml.patch
 
