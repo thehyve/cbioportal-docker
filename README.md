@@ -12,4 +12,4 @@ Alternatively, if you do not wish to change anything in the Docker file or the p
 
 #### Step 2 - run container
 
-In https://github.com/thehyve/cbioportal-docker/blob/master/docker_commands.sh you can find a number of commands to start a container based on the image built in step 1 and the extra mysql container for the cBioPortal DB.
+In [docker_commands.sh](docker_commands.sh) you can find a number of commands to start a container based on the image built in step 1 and the extra mysql container for the cBioPortal DB.
