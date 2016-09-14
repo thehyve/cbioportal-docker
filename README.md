@@ -10,20 +10,8 @@ docker network create cbio-net
 #### Step 2 - Run mysql with seed database
 Download the seed database from https://github.com/cBioPortal/cbioportal/blob/master/docs/Downloads.md#seed-database
 
-```
-docker run -d --name "cbioDB" \
-  --restart=always \
-  --net=cbio-net \
-  -p 8306:3306 \
-  -e MYSQL_ROOT_PASSWORD=P@ssword1 \
-  -e MYSQL_USER=cbio \
-  -e MYSQL_PASSWORD=P@ssword1 \
-  -e MYSQL_DATABASE=cbioportal \
-  -v /path_to_seed_database/cbioportal-seed.sql.gz:/docker-entrypoint-initdb.d/cbioportal-seed.sql.gz:ro \
-  mysql
-```
-
-If you want to make an image of the mysql and cbioportal container later on, you want to save the database files locally. To do this, make a volume of the folder containing these files with -v.
+This command imports the seed database file into a database stored in
+`/path_to_save_mysql_db/db_files/`, before starting the MySQL server.
 
 ```
 docker run -d --name "cbioDB" \
@@ -92,3 +80,7 @@ Finally we remove the cached Docker images.
 docker rmi mysql
 docker rmi custom/cbioportal
 ```
+
+## More commands
+
+For more uses of the cBioPortal image, see [example_commands.md](example_commands.md)
