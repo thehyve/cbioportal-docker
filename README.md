@@ -11,7 +11,7 @@ docker network create cbio-net
 Download the seed database from https://github.com/cBioPortal/cbioportal/blob/master/docs/Downloads.md#seed-database
 
 This command imports the seed database file into a database stored in
-`/path_to_save_mysql_db/db_files/`, before starting the MySQL server.
+`/path_to_save_mysql_db/db_files/` (:warning: this should be an absolute path in command below), before starting the MySQL server.
 
 ```
 docker run -d --name "cbioDB" \
