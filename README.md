@@ -81,6 +81,6 @@ docker rmi mysql
 docker rmi custom/cbioportal
 ```
 
-## More commands
+## Data Loading & More commands
 
 For more uses of the cBioPortal image, see [example_commands.md](example_commands.md)
