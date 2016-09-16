@@ -1,3 +1,9 @@
+#
+# Copyright (c) 2016 The Hyve B.V.
+# This code is licensed under the GNU Affero General Public License (AGPL),
+# version 3, or (at your option) any later version.
+#
+
 FROM tomcat:8-jre8
 MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 
