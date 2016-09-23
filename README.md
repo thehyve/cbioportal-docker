@@ -1,5 +1,5 @@
 # cbioportal-docker
-Download docker from www.docker.com. Make sure to assign enough memory to Docker when using Docker for Windows (Windows 10 Pro) or Docker for Mac (macOS Yosemite 10.10.3 or above). In macOS this can be set when clicked on the Docker icon -> Preferences... -> Adjust the Memory slider. By default it's set to 2 GB, which is too low and causes problems when loading multiple studies.
+Download docker from www.docker.com. Make sure to assign enough memory to Docker when using Docker for Windows (Windows 10 Pro) or Docker for Mac (macOS Yosemite 10.10.3 or above). In macOS this can be set when clicked on the Docker icon -> Preferences... -> Adjust the Memory slider. By default it's set to 2 GB, which causes problems when loading multiple studies.
 
 #### Step 1 - Setup network
 Create a network in order for the cBioPortal container and mysql database to communicate.
@@ -11,7 +11,9 @@ docker network create cbio-net
 Download the seed database from https://github.com/cBioPortal/cbioportal/blob/master/docs/Downloads.md#seed-database
 
 This command imports the seed database file into a database stored in
-`/path_to_save_mysql_db/db_files/` (:warning: this should be an absolute path in command below), before starting the MySQL server.
+`/<path_to_save_mysql_db>/db_files/` (:warning: this should be an absolute path in command below), before starting the MySQL server. 
+
+This process takes about 45 minutes. For much faster loading, we can choose to not load the PDB data, by removing the line that loads cbioportal-seed_only-pdb.sql.gz.
 
 ```
 docker run -d --name "cbioDB" \
@@ -22,8 +24,9 @@ docker run -d --name "cbioDB" \
   -e MYSQL_USER=cbio \
   -e MYSQL_PASSWORD=P@ssword1 \
   -e MYSQL_DATABASE=cbioportal \
-  -v /path_to_save_mysql_db/db_files/:/var/lib/mysql/ \
-  -v /path_to_seed_database/cbioportal-seed.sql.gz:/docker-entrypoint-initdb.d/cbioportal-seed.sql.gz:ro \
+  -v /<path_to_save_mysql_db>/db_files/:/var/lib/mysql/ \
+  -v /<path_to_seed_database>/cbioportal-seed_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
+  -v /<path_to_seed_database>/cbioportal-seed_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
   mysql
 ```
 
