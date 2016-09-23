@@ -1,5 +1,5 @@
 # cbioportal-docker
-Download docker from www.docker.com. Make sure to assign enough memory to Docker when using Docker for Windows (Windows 10 Pro) or Docker for Mac (macOS Yosemite 10.10.3 or above). In macOS this can be set when clicked on the Docker icon -> Preferences... -> Adjust the Memory slider. By default it's set to 2 GB, which causes problems when loading multiple studies.
+Download docker from www.docker.com. Make sure to assign enough memory to Docker when using Docker for Windows (Windows 10 Pro) or Docker for Mac (macOS Yosemite 10.10.3 or above). In macOS this can be set when clicked on the Docker icon -> Preferences... -> Adjust the Memory slider. By default it's set to 2 GB, which is too low and causes problems when loading multiple studies.
 
 #### Step 1 - Setup network
 Create a network in order for the cBioPortal container and mysql database to communicate.
