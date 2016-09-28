@@ -45,7 +45,13 @@ RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.pr
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
-	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war
+	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	# save the scripts jar so Maven does not clean it up
+	&& mv scripts/target/scripts-*.jar /root/ \
+	&& mvn clean \
+	# install the scripts jar to the target folder, where import scripts expect it
+	&& mkdir scripts/target/ \
+	&& mv /root/scripts-*.jar scripts/target/
 
 # add runtime configuration
 COPY ./catalina_server.xml.patch /root/
