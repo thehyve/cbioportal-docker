@@ -7,9 +7,8 @@
 FROM tomcat:8-jre8
 MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 
-# install build and runtime dependencies
+# install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		git \
 		libmysql-java \
 		patch \
 		python \
@@ -20,7 +19,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	# Debian does not add new features or break backwards compatibility within
 	# a stable release, but for these dependencies we need versions that do.
 	&& apt-get install -y --no-install-recommends -t jessie-backports \
-		maven \
 		openjdk-8-jdk \
 	&& rm -rf /var/lib/apt/lists/* \
 	# set up Tomcat to use the MySQL Connector/J Java connector
@@ -29,23 +27,29 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf $CATALINA_HOME/webapps/*m* 
 	
 
-# fetch the cBioPortal sources and version control metadata
+# fetch the cBioPortal sources, without keeping git and its deps in the image
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --single-branch -b v1.4.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN apt-get update && apt-get install -y --no-install-recommends git \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& git clone --depth=1 -b v1.4.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME \
+	#&& cd $PORTAL_HOME \
+	#&& git fetch https://github.com/thehyve/cbioportal.git my_development_branch \
+	#&& git checkout commit_hash_in_branch \
+	&& apt-get purge -y git && apt-get autoremove -y --purge
 WORKDIR $PORTAL_HOME
-
-#RUN git fetch https://github.com/thehyve/cbioportal.git my_development_branch \
-#       && git checkout commit_hash_in_branch
 
 # add buildtime configuration
 COPY ./portal.properties.patch /root/
 
 # install default config files, build and install
-RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
+RUN apt-get update && apt-get install -y --no-install-recommends maven \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
-	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war
+	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	&& apt-get purge -y maven && apt-get autoremove -y --purge
 
 # add runtime configuration
 COPY ./catalina_server.xml.patch /root/
