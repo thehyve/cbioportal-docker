@@ -9,9 +9,7 @@ MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 
 # install build and runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		git \
 		libmysql-java \
-		maven \
 		openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
 		patch \
 		python \
@@ -24,23 +22,26 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	# remove the example apps that come with Tomcat for security reasons
 	&& rm -rf $CATALINA_HOME/webapps/examples/
 
-# fetch the cBioPortal sources and version control metadata
+# fetch the cBioPortal sources, without keeping git and its deps in the image
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --single-branch -b v1.3.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN apt-get update && apt-get install -y --no-install-recommends git \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& git clone --depth 1 -b v1.3.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME \
+	&& apt-get purge -y git && apt-get autoremove -y --purge
 WORKDIR $PORTAL_HOME
-
-#RUN git fetch https://github.com/thehyve/cbioportal.git uniprot_accession_in_maf_rebased \
-#       && git checkout FETCH_HEAD
 
 # add buildtime configuration
 COPY ./portal.properties.patch /root/
 
 # install default config files, build and install
-RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
+RUN apt-get update && apt-get install -y --no-install-recommends maven \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
-	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war
+	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	&& apt-get purge -y maven && apt-get autoremove -y --purge
 
 # add runtime configuration
 COPY ./catalina_server.xml.patch /root/
