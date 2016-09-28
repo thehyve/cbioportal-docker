@@ -45,40 +45,9 @@ The import command:
 
 ### Running cBioPortal code from a local folder ###
 
-If you have checked out (or modified) a git branch locally in `~/cbioportal`
-and you want to run or debug it, you can use the following command. Note that
-the path given to the `-v` option must be an absolute path. The mapping for
-port 8000 and the references to JPDA open a port for remote debugging software
-to attach. The image is used as a runtime environment and as a cache for
-dependencies when compiling, while the `portal.properties` file will be read
-from the source folder.
-
-```shell
-docker run --rm \
-    -p 8000:8000 \
-    -p 8080:8080 \
-    -v "$HOME"/cbioportal:/cbioportal \
-    --net=cbio-net \
-    --name=cbioportal-dev \
-    cbioportal-image \
-    sh -c 'mvn -DskipTests clean install && mv portal/target/cbioportal.war "$CATALINA_HOME"/webapps/ && JPDA_ADDRESS=0.0.0.0:8000 exec catalina.sh jpda run'
-```
-
-### Testing cBioPortal code from a GitHub branch ###
-
-If you want to run and test code from a branch you have not checked out
-locally, say from someone else’s pull request, you can use a command like the
-following. This example checks out the `rc` branch of the GitHub repository for
-`thehyve`.
-
-```shell
-docker run --rm \
-    -p 8081:8080 \
-    --net=cbio-net \
-    --name=cbioportal-test \
-    cbioportal-image \
-    sh -c 'git fetch https://github.com/thehyve/cbioportal.git rc && git checkout FETCH_HEAD && mvn -DskipTests clean install && mv portal/target/cbioportal.war "$CATALINA_HOME"/webapps/ && exec catalina.sh run'
-```
+TODO: document building images based on a different online git
+branch or a local folder, and using volumes to overwrite frontend
+resources on the fly
 
 ### Inspecting or adjusting the database ###
 
