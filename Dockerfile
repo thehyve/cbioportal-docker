@@ -23,12 +23,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf $CATALINA_HOME/webapps/examples/
 
 # fetch the cBioPortal sources, without keeping git and its deps in the image
-ENV PORTAL_HOME=/cbioportal
+ENV PORTAL_SRC=/cbioportal
 RUN apt-get update && apt-get install -y --no-install-recommends git \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& git clone --depth 1 -b v1.3.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME \
+	&& git clone --depth 1 -b v1.3.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_SRC \
 	&& apt-get purge -y git && apt-get autoremove -y --purge
-WORKDIR $PORTAL_HOME
+WORKDIR $PORTAL_SRC
 
 # add buildtime configuration
 COPY ./portal.properties.patch /root/
@@ -41,7 +41,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends maven \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
 	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	&& mvn clean \
 	&& apt-get purge -y maven && apt-get autoremove -y --purge
+ENV PORTAL_HOME=$CATALINA_HOME/webapps/cbioportal
 
 # add runtime configuration
 COPY ./catalina_server.xml.patch /root/
