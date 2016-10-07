@@ -45,6 +45,7 @@ docker run -d --name "cbioDB" \
 Checkout the repository, enter the directory and run build the image.
 
 ```
+cd cbioportal-docker
 git clone https://github.com/thehyve/cbioportal-docker.git
 docker build -t custom/cbioportal .
 ```
