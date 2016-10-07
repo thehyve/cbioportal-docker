@@ -19,7 +19,7 @@ docker network create cbio-net
 ```
 
 #### Step 2 - Run mysql with seed database
-Download the seed database from https://github.com/cBioPortal/cbioportal/blob/master/docs/Downloads.md#seed-database
+Download the seed database from https://github.com/thehyve/cbioportal/blob/new_seed_db/docs/Downloads.md#seed-database
 
 This command imports the seed database file into a database stored in
 `/<path_to_save_mysql_db>/db_files/` (:warning: this should be an absolute path in command below), before starting the MySQL server. 
