@@ -38,15 +38,15 @@ docker run -d --name "cbioDB" \
 Checkout the repository, enter the directory and run build the image.
 
 ```
-cd cbioportal-docker
 git clone https://github.com/thehyve/cbioportal-docker.git
+cd cbioportal-docker
 docker build -t custom/cbioportal .
 ```
 
 Alternatively, if you do not wish to change anything in the Dockerfile or the properties, you can run:
 
 ```
-docker build -t cbioportal https://github.com/thehyve/cbioportal-docker.git
+docker build -t custom/cbioportal https://github.com/thehyve/cbioportal-docker.git
 ```
 
 #### Step 4 - Run the cBioPortal container
