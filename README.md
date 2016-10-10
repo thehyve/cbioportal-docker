@@ -40,22 +40,22 @@ Checkout the repository, enter the directory and run build the image.
 ```
 git clone https://github.com/thehyve/cbioportal-docker.git
 cd cbioportal-docker
-docker build -t custom/cbioportal .
+docker build -t cbioportal-image .
 ```
 
 Alternatively, if you do not wish to change anything in the Dockerfile or the properties, you can run:
 
 ```
-docker build -t custom/cbioportal https://github.com/thehyve/cbioportal-docker.git
+docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.git
 ```
 
 #### Step 4 - Run the cBioPortal container
 ```
-docker run -d --name="cbioportal" \
+docker run -d --name="cbioportal-container" \
   --restart=always \
   --net=cbio-net \
   -p 8081:8080 \
-  custom/cbioportal
+  cbioportal-image
 ```
 
 cBioPortal can now be reached at http://localhost:8081/cbioportal/
@@ -69,13 +69,13 @@ docker ps -a
 First we stop the Docker containers.
 ```
 docker stop cbioDB
-docker stop cbioportal
+docker stop cbioportal-container
 ```
 
 Then we remove the Docker containers.
 ```
 docker rm cbioDB
-docker rm cbioportal
+docker rm cbioportal-container
 ```
 
 Cached Docker images can be seen with:
@@ -86,7 +86,7 @@ docker images
 Finally we remove the cached Docker images.
 ```
 docker rmi mysql
-docker rmi custom/cbioportal
+docker rmi cbioportal-image
 ```
 
 ## Data Loading & More commands
