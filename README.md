@@ -17,7 +17,7 @@ Download the seed database from https://github.com/thehyve/cbioportal/blob/new_s
 This command imports the seed database file into a database stored in
 `/<path_to_save_mysql_db>/db_files/` (:warning: this should be an absolute path in command below), before starting the MySQL server. 
 
-This process takes about 45 minutes. For much faster loading, we can choose to not load the PDB data, by removing the line that loads cbioportal-seed_only-pdb.sql.gz.
+:warning: This process takes about 45 minutes. **For much faster loading, we can choose to not load the PDB data**, by removing the line that loads cbioportal-seed_only-pdb.sql.gz. Please note that your instance will be missing the 3D structures view feature (in mutation view) if you chose to leave this out.
 
 ```
 docker run -d --name "cbioDB" \
