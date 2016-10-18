@@ -14,6 +14,34 @@ docker run --rm --net cbio-net \
     metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
 ```
 
+### Importing data (method 2) ###
+
+Similar to the method above, but here you open a bash on the container itself and execute the commands there. 
+
+###### Step 1 (one time only for a specific image)
+
+Set up the container `importer-container` mapping the input and output dirs with `-v` parameters:
+
+```shell
+docker run -d --name="importer-container" \
+  --restart=always \
+  --net=cbio-net \
+   -v "$PWD"/study-dir:/study:ro \
+   -v "$HOME"/Desktop:/outdir \
+  cbioportal-image
+```
+###### Step 2
+
+Open bash on container and execute the import command.
+
+```shell
+docker exec -it importer-container bash
+```
+The import command:
+```shell
+ metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
+```
+
 ### Running cBioPortal code from a local folder ###
 
 If you have checked out (or modified) a git branch locally in `~/cbioportal`
