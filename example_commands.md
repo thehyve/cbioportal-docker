@@ -13,6 +13,7 @@ docker run --rm --net cbio-net \
     cbioportal-image \
     metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
 ```
+:warning: after importing a study, remember to restart `cbioportal-container` to see the study in the home page. Run `docker restart cbioportal-container`
 
 ### Importing data (method 2) ###
 
