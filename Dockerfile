@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --single-branch -b v1.2.5 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN git clone --single-branch -b v1.3.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
 #RUN git fetch https://github.com/thehyve/cbioportal.git uniprot_accession_in_maf_rebased \
@@ -40,7 +40,7 @@ RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.pr
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
-	&& mv portal/target/cbioportal.war $CATALINA_HOME/webapps/
+	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war
 
 # add runtime configuration
 COPY ./catalina_server.xml.patch /root/

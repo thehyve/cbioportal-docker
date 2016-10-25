@@ -48,8 +48,8 @@
 +skin.login.saml.registration_html=Sign in
  
  # setting controlling which tabs to hide/show in the patient view
- skin.patient_view.show_clinical_trials_tab=false
-@@ -114,11 +114,11 @@
+ skin.patient_view.show_drugs_tab=false
+@@ -115,11 +115,11 @@
  patient_view_genomic_overview_cna_cutoff=0.2,1.5
  digitalslidearchive.iframe.url=http://cancer.digitalslidearchive.net/index_mskcc.php?slide_name=
  digitalslidearchive.meta.url=http://cancer.digitalslidearchive.net/local_php/get_slide_list_from_db_groupid_not_needed.php?slide_name_filter=
@@ -61,9 +61,9 @@
 -segfile.url=http://cbio.mskcc.org/cancergenomics/gdac-portal/seg/
 +segfile.url=
  
- # Enable OncoKB annotation
+ # Enable OncoKB annotation. Please set it to empty if you want to disable the OncoKB annotation.
  oncokb.url=http://oncokb.org/legacy-api/
-@@ -144,7 +144,7 @@
+@@ -145,7 +145,7 @@
  pathway_commons.url=http://www.pathwaycommons.org/pc2
  
  # bitly, please use your bitly user and apiKey
