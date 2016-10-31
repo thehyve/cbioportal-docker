@@ -29,8 +29,9 @@ docker run -d --name "cbioDB" \
   -e MYSQL_PASSWORD=P@ssword1 \
   -e MYSQL_DATABASE=cbioportal \
   -v /<path_to_save_mysql_db>/db_files/:/var/lib/mysql/ \
-  -v /<path_to_seed_database>/cbioportal-seed_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
-  -v /<path_to_seed_database>/cbioportal-seed_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
+  -v /<path_to_seed_database>/cgds.sql:/docker-entrypoint-initdb.d/cgds.sql:ro \
+  -v /<path_to_seed_database>/seed-cbioportal_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
+  -v /<path_to_seed_database>/seed-cbioportal_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
   mysql
 ```
 
