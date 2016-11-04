@@ -47,15 +47,9 @@ If any ERROR occurs, make sure to check this. A common problem is getting an ERR
 Checkout the repository, enter the directory and run build the image.
 
 ```
-git clone https://github.com/thehyve/cbioportal-docker.git
+git clone --single-branch -b hotfix_plus_1866_1868 'https://github.com/thehyve/cbioportal-docker.git'
 cd cbioportal-docker
 docker build -t cbioportal-image .
-```
-
-Alternatively, if you do not wish to change anything in the Dockerfile or the properties, you can run:
-
-```
-docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.git
 ```
 
 #### Step 4 - Run the cBioPortal container
