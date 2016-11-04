@@ -35,6 +35,14 @@ docker run -d --name "cbioDB" \
   mysql
 ```
 
+:warning: Please follow the logs of this step to ensure no ERRORs occur. You can follow the logs by running: 
+
+```
+sudo docker logs -f cbioDB
+``` 
+If any ERROR occurs, make sure to check this. A common problem is getting an ERROR by pointing the `-v` parameters above to files/folders that do not exist.
+
+
 #### Step 3 - Build the Docker image containing cBioPortal
 Checkout the repository, enter the directory and run build the image.
 
