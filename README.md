@@ -12,7 +12,7 @@ docker network create cbio-net
 ```
 
 #### Step 2 - Run mysql with seed database
-Download the seed database from https://github.com/thehyve/cbioportal/blob/new_seed_db/docs/Downloads.md#seed-database
+Download the seed database from [datahub seedDB space]( https://github.com/cBioPortal/datahub/blob/rc/seedDB/README.md)
 
 This command imports the seed database file into a database stored in
 `/<path_to_save_mysql_db>/db_files/` (:warning: this should be an absolute path in command below), before starting the MySQL server. 
@@ -29,10 +29,17 @@ docker run -d --name "cbioDB" \
   -e MYSQL_PASSWORD=P@ssword1 \
   -e MYSQL_DATABASE=cbioportal \
   -v /<path_to_save_mysql_db>/db_files/:/var/lib/mysql/ \
-  -v /<path_to_seed_database>/cbioportal-seed_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
-  -v /<path_to_seed_database>/cbioportal-seed_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
+  -v /<path_to_seed_database>/cgds.sql:/docker-entrypoint-initdb.d/cgds.sql:ro \
+  -v /<path_to_seed_database>/seed-cbioportal_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
+  -v /<path_to_seed_database>/seed-cbioportal_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
   mysql
 ```
+:warning: Please follow the logs of this step to ensure no ERRORs occur. You can follow the logs by running: 
+
+```
+sudo docker logs -f cbioDB
+``` 
+If any ERROR occurs, make sure to check this. A common problem is getting an ERROR by pointing the `-v` parameters above to files/folders that do not exist.
 
 #### Step 3 - Build the Docker image containing cBioPortal
 Checkout the repository, enter the directory and run build the image.

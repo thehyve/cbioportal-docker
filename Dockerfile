@@ -10,12 +10,16 @@ MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 # install build and runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		libmysql-java \
-		openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
 		patch \
 		python \
 		python-jinja2 \
 		python-mysqldb \
 		python-requests \
+	# install new versions of these packages backported to Debian stable;
+	# Debian does not add new features or break backwards compatibility within
+	# a stable release, but for these dependencies we need versions that do.
+	&& apt-get install -y --no-install-recommends -t jessie-backports \
+		openjdk-8-jdk \
 	&& rm -rf /var/lib/apt/lists/* \
 	# set up Tomcat to use the MySQL Connector/J Java connector
 	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
@@ -34,7 +38,7 @@ WORKDIR $PORTAL_SRC
 COPY ./portal.properties.patch /root/
 
 # install default config files, build and install
-RUN apt-get update && apt-get install -y --no-install-recommends maven \
+RUN apt-get update && apt-get install -y --no-install-recommends -t jessie-backports maven \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
