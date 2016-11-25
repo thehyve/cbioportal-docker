@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	# set up Tomcat to use the MySQL Connector/J Java connector
 	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
 	# remove webapps that come with Tomcat for security reasons
-	&& rm -rf $CATALINA_HOME/webapps/* 
+	&& rm -rf $CATALINA_HOME/webapps/m* 
 	
 
 # fetch the cBioPortal sources and version control metadata
