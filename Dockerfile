@@ -27,12 +27,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf $CATALINA_HOME/webapps/examples/
 
 # fetch the cBioPortal sources, without keeping git and its deps in the image
-ENV PORTAL_SRC=/cbioportal
+ENV PORTAL_HOME=/cbioportal
 RUN apt-get update && apt-get install -y --no-install-recommends git \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& git clone --depth 1 -b v1.3.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_SRC \
+	&& git clone --depth 1 -b v1.3.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME \
 	&& apt-get purge -y git && apt-get autoremove -y --purge
-WORKDIR $PORTAL_SRC
+WORKDIR $PORTAL_HOME
 
 # add buildtime configuration
 COPY ./portal.properties.patch /root/
@@ -46,9 +46,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends -t jessie-backp
 	&& mvn -DskipTests clean install \
 	# deploy the war to the Tomcat web container
 	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal/ \
+	# save the scripts jar needed for importing, so Maven does not clean it up
+	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
+	&& mkdir scripts/target/ \
+	&& mv /root/scripts-*.jar scripts/target/ \
 	&& apt-get purge -y maven && apt-get autoremove -y --purge
-ENV PORTAL_HOME=$CATALINA_HOME/webapps/cbioportal
 
 # add runtime configuration
 COPY ./catalina_server.xml.patch /root/

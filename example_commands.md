@@ -11,7 +11,7 @@ docker run --rm --net cbio-net \
     -v "$PWD"/study-dir:/study:ro \
     -v "$HOME"/Desktop:/outdir \
     cbioportal-image \
-    sh -c 'exec metaImport.py --jar_path=/usr/local/tomcat/webapps/cbioportal/WEB-INF/lib/core-*.jar -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html'
+    metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
 ```
 :warning: after importing a study, remember to restart `cbioportal-container` to see the study in the home page. Run `docker restart cbioportal-container`
 
