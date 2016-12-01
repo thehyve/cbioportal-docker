@@ -48,7 +48,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends maven \
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
-	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	# deploy the war to the Tomcat web container
+	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal/ \
 	# save the scripts jar needed for importing, so Maven does not clean it up
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
