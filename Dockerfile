@@ -7,7 +7,7 @@
 FROM tomcat:8-jre8
 MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 
-# install build and runtime dependencies
+# install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		libmysql-java \
 		patch \
@@ -44,7 +44,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends -t jessie-backp
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
-	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	# deploy the war to the Tomcat web container
+	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal/ \
 	&& mvn clean \
 	&& apt-get purge -y maven && apt-get autoremove -y --purge
 ENV PORTAL_HOME=$CATALINA_HOME/webapps/cbioportal
