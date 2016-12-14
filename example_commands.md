@@ -61,7 +61,7 @@ docker run --rm \
     --net=cbio-net \
     --name=cbioportal-dev \
     cbioportal-image \
-    sh -c 'mvn -DskipTests clean install && mv portal/target/cbioportal.war "$CATALINA_HOME"/webapps/ && JPDA_ADDRESS=0.0.0.0:8000 exec catalina.sh jpda run'
+    sh -c 'mvn -DskipTests clean install && rm -f "$CATALINA_HOME/webapps/cbioportal.war" && unzip portal/target/cbioportal*.war -d "$CATALINA_HOME/webapps/cbioportal/" && JPDA_ADDRESS=0.0.0.0:8000 exec catalina.sh jpda run'
 ```
 
 ### Testing cBioPortal code from a GitHub branch ###
@@ -77,7 +77,7 @@ docker run --rm \
     --net=cbio-net \
     --name=cbioportal-test \
     cbioportal-image \
-    sh -c 'git fetch https://github.com/thehyve/cbioportal.git rc && git checkout FETCH_HEAD && mvn -DskipTests clean install && mv portal/target/cbioportal.war "$CATALINA_HOME"/webapps/ && exec catalina.sh run'
+    sh -c 'git fetch https://github.com/thehyve/cbioportal.git rc && git checkout FETCH_HEAD && mvn -DskipTests clean install && rm -f "$CATALINA_HOME/webapps/cbioportal.war" && unzip portal/target/cbioportal*.war -d "$CATALINA_HOME/webapps/cbioportal/" && exec catalina.sh run'
 ```
 
 ### Inspecting or adjusting the database ###
