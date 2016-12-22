@@ -31,11 +31,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --single-branch -b v1.3.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN git clone --single-branch -b v1.3.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
-#RUN git fetch https://github.com/thehyve/cbioportal.git uniprot_accession_in_maf_rebased \
-#       && git checkout FETCH_HEAD
+#RUN git fetch https://github.com/thehyve/cbioportal.git my_development_branch \
+#       && git checkout commit_hash_in_branch
 
 # add buildtime configuration
 COPY ./portal.properties.patch /root/
