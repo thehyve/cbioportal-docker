@@ -32,7 +32,7 @@ docker run -d --name "cbioDB" \
   -v /<path_to_seed_database>/cgds.sql:/docker-entrypoint-initdb.d/cgds.sql:ro \
   -v /<path_to_seed_database>/seed-cbioportal_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
   -v /<path_to_seed_database>/seed-cbioportal_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
-  mysql
+  mysql; sudo docker logs -f cbioDB
 ```
 :warning: Please follow the logs of this step to ensure no ERRORs occur. You can follow the logs by running: 
 
