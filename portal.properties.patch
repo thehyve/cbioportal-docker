@@ -49,7 +49,7 @@
  
  # setting controlling which tabs to hide/show in the patient view
  skin.patient_view.show_drugs_tab=false
-@@ -145,7 +145,7 @@
+@@ -150,7 +150,7 @@
  pathway_commons.url=http://www.pathwaycommons.org/pc2
  
  # bitly, please use your bitly user and apiKey
