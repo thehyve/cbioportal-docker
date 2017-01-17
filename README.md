@@ -72,6 +72,10 @@ Activity of Docker containers can be seen with:
 docker ps -a
 ```
 
+#### Step 5- Migrate the DB schema to the correct version
+
+See [Updating the database schema](example_commands.md#updating-the-database-schema)
+
 ## Uninstalling cBioPortal
 First we stop the Docker containers.
 ```
