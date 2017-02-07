@@ -14,10 +14,16 @@ docker network create cbio-net
 #### Step 2 - Run mysql with seed database
 Download the seed database from [datahub seedDB space]( https://github.com/cBioPortal/datahub/blob/master/seedDB/README.md)
 
-This command imports the seed database file into a database stored in
-`/<path_to_save_mysql_db>/db_files/` (:warning: this should be an absolute path in command below), before starting the MySQL server. 
+The command below imports the seed database files downloaded to
+`/<path_to_seed_database>/` into a database stored in
+`/<path_to_save_mysql_db>/db_files/` (this should be an absolute
+path), before starting the MySQL server.
 
-:warning: This process takes about 45 minutes. **For much faster loading, we can choose to not load the PDB data**, by removing the line that loads `cbioportal-seed_only-pdb.sql.gz`. Please note that your instance will be missing the 3D structures view feature (in mutation view) if you chose to leave this out.
+:warning: This process can take about 45 minutes. For much faster
+loading, we can choose to not load the PDB data, by removing the
+line that loads `cbioportal-seed_only-pdb.sql.gz`. Please note that
+your instance will be missing the 3D structure view feature (in the
+mutations view) if you chose to leave this out.
 
 ```
 docker run -d --name "cbioDB" \
@@ -32,14 +38,14 @@ docker run -d --name "cbioDB" \
   -v /<path_to_seed_database>/cgds.sql:/docker-entrypoint-initdb.d/cgds.sql:ro \
   -v /<path_to_seed_database>/seed-cbioportal_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
   -v /<path_to_seed_database>/seed-cbioportal_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
-  mysql; sudo docker logs -f cbioDB
+  mysql
 ```
-:warning: Please follow the logs of this step to ensure no ERRORs occur. You can follow the logs by running: 
 
+Make sure to follow the logs of this step to ensure no errors occur. Run this command:
 ```
 sudo docker logs -f cbioDB
 ``` 
-If any ERROR occurs, make sure to check this. A common problem is getting an ERROR by pointing the `-v` parameters above to files/folders that do not exist.
+If any error occurs, make sure to check it. A common cause is pointing the `-v` parameters above to folders or files that do not exist.
 
 #### Step 3 - Build the Docker image containing cBioPortal
 Checkout the repository, enter the directory and run build the image.
