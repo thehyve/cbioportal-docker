@@ -14,10 +14,10 @@ docker network create cbio-net
 #### Step 2 - Run mysql with seed database
 Download the seed database from [datahub seedDB space]( https://github.com/cBioPortal/datahub/blob/master/seedDB/README.md)
 
-The command below imports the seed database files downloaded to
+The command below imports the downloaded seed database files in
 `/<path_to_seed_database>/` into a database stored in
-`/<path_to_save_mysql_db>/db_files/` (this should be an absolute
-path), before starting the MySQL server.
+`/<path_to_save_mysql_db>/db_files/` (these should be absolute
+paths), before starting the MySQL server.
 
 :warning: This process can take about 45 minutes. For much faster
 loading, we can choose to not load the PDB data, by removing the
