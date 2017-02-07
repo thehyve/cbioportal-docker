@@ -56,7 +56,19 @@ Alternatively, if you do not wish to change anything in the Dockerfile or the pr
 docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.git
 ```
 
-#### Step 4 - Run the cBioPortal container
+#### Step 4 - Update the database schema
+Update the seeded database schema to match the cBioPortal version
+in the image, by running the following command. Note that this will
+most likely make your database irreversibly incompatible with older
+versions of the portal code.
+
+```
+docker run --rm -it --net cbio-net \
+    cbioportal-image \
+    migrate_db.py -p /cbioportal/src/main/resources/portal.properties -s /cbioportal/core/src/main/resources/db/migration.sql
+```
+
+#### Step 5 - Run the cBioPortal web server
 ```
 docker run -d --name="cbioportal-container" \
   --restart=always \
@@ -71,10 +83,6 @@ Activity of Docker containers can be seen with:
 ```
 docker ps -a
 ```
-
-#### Step 5- Migrate the DB schema to the correct version
-
-See [Updating the database schema](example_commands.md#updating-the-database-schema)
 
 ## Uninstalling cBioPortal
 First we stop the Docker containers.

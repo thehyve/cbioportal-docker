@@ -100,17 +100,3 @@ docker run -it --rm \
     mysql \
     sh -c 'mysql -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"'
 ```
-
-### Updating the database schema ###
-
-If the portal tells you that your database schema is outdated, you
-can update it to match the cBioPortal version in the image by running
-the following command. Note that this will most likely make your
-database irreversibly incompatible with older versions of the portal
-code.
-
-```shell
-docker run --rm -it --net cbio-net \
-    cbioportal-image \
-    migrate_db.py -p /cbioportal/src/main/resources/portal.properties -s /cbioportal/core/src/main/resources/db/migration.sql
-```
