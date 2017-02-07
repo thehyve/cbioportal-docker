@@ -17,11 +17,13 @@ docker run --rm --net cbio-net \
 
 ### Importing data (method 2) ###
 
-Similar to the method above, but here you open a bash on the container itself and execute the commands there. 
+Similar to the method above, but here you open a bash shell in an otherwise idle container and run the commands there.
 
 ###### Step 1 (one time only for a specific image)
 
-Set up the container `importer-container` mapping the input and output dirs with `-v` parameters:
+Set up the container `importer-container` mapping the input and
+output dirs with `-v` parameters, and keep it running idle in the
+background:
 
 ```shell
 docker run -d --name="importer-container" \
@@ -29,11 +31,12 @@ docker run -d --name="importer-container" \
   --net=cbio-net \
    -v "$PWD"/study-dir:/study:ro \
    -v "$HOME"/Desktop:/outdir \
-  cbioportal-image
+  cbioportal-image tail -f /dev/null
 ```
+
 ###### Step 2
 
-Open bash on container and execute the import command.
+Run bash in the container and execute the import command.
 
 ```shell
 docker exec -it importer-container bash
