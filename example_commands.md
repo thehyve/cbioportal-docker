@@ -11,7 +11,7 @@ docker run --rm --net cbio-net \
     -v "$PWD"/study-dir:/study:ro \
     -v "$HOME"/Desktop:/outdir \
     cbioportal-image \
-    metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
+    metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html -v
 ```
 :warning: after importing a study, remember to restart `cbioportal-container` to see the study in the home page. Run `docker restart cbioportal-container`
 
@@ -44,6 +44,28 @@ docker exec -it importer-container bash
 The import command:
 ```shell
  metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
+```
+
+### Importing data when server has authentication enabled
+
+When authentication is turned ON, then the -u parameter cannot be used. Instead the -p parameter can be used to validate against a local cache of the portal information. The steps are described below. The first step creates the local cache. The second one runs metaImport with -p option using this cache. 
+
+###### Step 1: create local cache:
+
+```shell
+docker run --rm --net cbio-net \
+    -e PORTAL_HOME=/cbioportal \
+    -v "$PWD"/study-dir/portal-info:/portal-info \
+    cbioportal-image /bin/sh -c 'cd /cbioportal/core/src/main/scripts; ./dumpPortalInfo.pl /portal-info/'
+```
+###### Step 2: run metaImport:
+
+```shell
+docker run --rm --net cbio-net \
+    -v "$PWD"/study-dir:/study:ro \
+    -v "$HOME"/Desktop:/outdir \
+    cbioportal-image \
+    metaImport.py -p /study/portal-info -s /study --html=/outdir/report.html -v
 ```
 
 ### Running cBioPortal code from a local folder ###
