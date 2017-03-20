@@ -62,6 +62,11 @@ Alternatively, if you do not wish to change anything in the Dockerfile or the pr
 docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.git
 ```
 
+If you want to change any variable defined in portal.properties,
+have a look [here](adjusting_portal.properties_configuration.md).
+If you want to build an image based on a different branch, you can
+read [this](adjusting_Dockerfile_configuration.md).
+
 #### Step 4 - Update the database schema
 Update the seeded database schema to match the cBioPortal version
 in the image, by running the following command. Note that this will
