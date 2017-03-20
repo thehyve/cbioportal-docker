@@ -26,10 +26,9 @@ your instance will be missing the 3D structure view feature (in the
 mutations view) if you chose to leave this out.
 
 ```
-docker run -d --name "cbioDB" \
-  --restart=always \
+docker run -d --restart=always \
+  --name='cbioDB' \
   --net=cbio-net \
-  -p 8306:3306 \
   -e MYSQL_ROOT_PASSWORD=P@ssword1 \
   -e MYSQL_USER=cbio \
   -e MYSQL_PASSWORD=P@ssword1 \

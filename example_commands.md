@@ -85,13 +85,17 @@ docker run --rm \
 
 ### Inspecting or adjusting the database ###
 
-If you have mapped a port on the host to port 3306 of the container
-running the MySQL database, using an option such as `-p 8306:3306`,
-you can connect to this port (localhost:8306) using [MySQL
+When creating the database container, you can map a port on the
+local host to port 3306 of the container running the MySQL database,
+by adding an option such as `-p 127.0.0.1:8306:3306` to the `docker
+run` command before the name of the image (`mysql`).  You can then
+connect to this port (port 8306 in this example) using [MySQL
 Workbench](https://www.mysql.com/products/workbench/) or another
-MySQL client.  Alternatively, you can connect a command-line client
-to the container (named `cbioDB` in this example) via the `--net`
-option with the following command:
+MySQL client.
+
+If you have not opened a port, the following command can still
+connect a command-line client to the container (`cbioDB` here)
+using the `--net` option:
 
 ```shell
 docker run -it --rm \
