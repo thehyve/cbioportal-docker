@@ -43,7 +43,7 @@ docker run -d --name "cbioDB" \
 
 Make sure to follow the logs of this step to ensure no errors occur. Run this command:
 ```
-sudo docker logs -f cbioDB
+docker logs -f cbioDB
 ``` 
 If any error occurs, make sure to check it. A common cause is pointing the `-v` parameters above to folders or files that do not exist.
 
