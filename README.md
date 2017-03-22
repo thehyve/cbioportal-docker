@@ -80,12 +80,21 @@ docker run --rm -it --net cbio-net \
 
 #### Step 5 - Run the cBioPortal web server
 ```
-docker run -d --name="cbioportal-container" \
-  --restart=always \
-  --net=cbio-net \
-  -p 8081:8080 \
-  cbioportal-image
+docker run -d --restart=always \
+    --name=cbioportal-container \
+    --net=cbio-net \
+    -e CATALINA_OPTS='-Xms2g -Xmx4g' \
+    -p 8081:8080 \
+    cbioportal-image
 ```
+
+On server systems that can easily spare 4 GiB or more of memory,
+set the `-Xms` and `-Xmx` options to the same number. This should
+increase performance of certain memory-intensive web services such
+as computing the data for the co-expression tab. If you are using
+MacOS or Windows, make sure to take a look at [these
+notes](notes-for-non-linux.md) to allocate more memory for the
+virtual machine in which all Docker processes are running.
 
 cBioPortal can now be reached at http://localhost:8081/cbioportal/
 
