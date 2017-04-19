@@ -12,7 +12,7 @@ docker network create cbio-net
 ```
 
 #### Step 2 - Run mysql with seed database
-Download the seed database from [datahub seedDB space]( https://github.com/cBioPortal/datahub/blob/master/seedDB/README.md)
+Download the seed database from [datahub seedDB space]( https://github.com/cBioPortal/datahub/blob/bee2a285d4c93cd658b5af30ace6fc33192d8190/seedDB/README.md)
 
 The command below imports the downloaded seed database files in
 `/<path_to_seed_database>/` into a database stored in
@@ -21,7 +21,7 @@ paths), before starting the MySQL server.
 
 :warning: This process can take about 45 minutes. For much faster
 loading, we can choose to not load the PDB data, by removing the
-line that loads `cbioportal-seed_only-pdb.sql.gz`. Please note that
+line that loads `cbioportal-seed_<genome_build>_<seed_version>_only-pdb.sql.gz`. Please note that
 your instance will be missing the 3D structure view feature (in the
 mutations view) if you chose to leave this out.
 
@@ -35,8 +35,8 @@ docker run -d --restart=always \
   -e MYSQL_DATABASE=cbioportal \
   -v /<path_to_save_mysql_db>/db_files/:/var/lib/mysql/ \
   -v /<path_to_seed_database>/cgds.sql:/docker-entrypoint-initdb.d/cgds.sql:ro \
-  -v /<path_to_seed_database>/seed-cbioportal_no-pdb_hg19.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
-  -v /<path_to_seed_database>/seed-cbioportal_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
+  -v /<path_to_seed_database>/seed-cbioportal_<genome_build>_<seed_version>.sql.gz:/docker-entrypoint-initdb.d/seed_part1.sql.gz:ro \
+  -v /<path_to_seed_database>/seed-cbioportal_<genome_build>_<seed_version>_only-pdb.sql.gz:/docker-entrypoint-initdb.d/seed_part2.sql.gz:ro \
   mysql
 ```
 
