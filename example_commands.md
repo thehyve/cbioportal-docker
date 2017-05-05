@@ -7,7 +7,7 @@ database configured in the image, saving an html report of the validation to
 absolute paths.
 
 ```shell
-docker run --rm --net cbio-net \
+docker run -it --rm --net cbio-net \
     -v "$PWD"/study-dir:/study:ro \
     -v "$HOME"/Desktop:/outdir \
     cbioportal-image \
