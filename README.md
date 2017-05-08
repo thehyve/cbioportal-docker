@@ -12,18 +12,11 @@ docker network create cbio-net
 ```
 
 #### Step 2 - Run mysql with seed database
-Download the seed database from [datahub seedDB space]( https://github.com/cBioPortal/datahub/blob/bee2a285d4c93cd658b5af30ace6fc33192d8190/seedDB/README.md)
+Download the seed database from [cBioPortal Datahub]( https://github.com/cBioPortal/datahub/blob/bee2a285d4c93cd658b5af30ace6fc33192d8190/seedDB/README.md).
 
-The command below imports the downloaded seed database files in
-`/<path_to_seed_database>/` into a database stored in
-`/<path_to_save_mysql_db>/db_files/` (these should be absolute
-paths), before starting the MySQL server.
+:warning: Please replace `/<path_to_seed_database>/cbioportal-seed_<genome_build>_<seed_version>` with the path and name of the downloaded seed database. The command below imports the seed database files into a MySQL database stored in `/<path_to_save_mysql_db>/db_files/`. These should be absolute paths.
 
-:warning: This process can take about 45 minutes. For much faster
-loading, we can choose to not load the PDB data, by removing the
-line that loads `cbioportal-seed_<genome_build>_<seed_version>_only-pdb.sql.gz`. Please note that
-your instance will be missing the 3D structure view feature (in the
-mutations view) if you chose to leave this out.
+:information_source: The protein database (PDB) data is relatively large and can therefore take 45 minutes to load. You can skip loading this part of the seed database by removing the line that loads `cbioportal-seed_<genome_build>_<seed_version>_only-pdb.sql.gz`. Please note that your instance will be missing the 3D structure view feature (in the mutations view) if you chose to leave this out.
 
 ```
 docker run -d --restart=always \
@@ -43,7 +36,7 @@ docker run -d --restart=always \
 Make sure to follow the logs of this step to ensure no errors occur. Run this command:
 ```
 docker logs -f cbioDB
-``` 
+```
 If any error occurs, make sure to check it. A common cause is pointing the `-v` parameters above to folders or files that do not exist.
 
 #### Step 3 - Build the Docker image containing cBioPortal
