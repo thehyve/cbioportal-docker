@@ -27,7 +27,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
 	# remove webapps that come with Tomcat for security reasons
 	&& rm -rf $CATALINA_HOME/webapps/*m* 
-	
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
@@ -37,11 +36,16 @@ WORKDIR $PORTAL_HOME
 #RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
 #       && git checkout commit_hash_in_branch
 
+# backport the patch in https://github.com/cBioPortal/cbioportal/pull/2473,
+# to remove the dependency of the Perl scripts on intermediate build files
+COPY 0001-Make-the-Perl-layer-use-the-Scripts-JAR.patch /root/
+
 # add buildtime configuration
 COPY ./portal.properties.patch /root/
 
 # install default config files, build and install
-RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
+RUN git apply /root/0001-Make-the-Perl-layer-use-the-Scripts-JAR.patch \
+	&& cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean install \
