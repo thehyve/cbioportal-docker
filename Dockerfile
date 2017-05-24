@@ -48,7 +48,7 @@ RUN git apply /root/0001-Make-the-Perl-layer-use-the-Scripts-JAR.patch \
 	&& cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
-	&& mvn -DskipTests clean install \
+	&& mvn -DskipTests clean package \
 	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
 	# save the scripts jar so Maven does not clean it up
 	&& mv scripts/target/scripts-*.jar /root/ \
