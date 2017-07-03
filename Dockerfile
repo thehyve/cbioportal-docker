@@ -31,7 +31,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --depth 1 -b v1.6.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN git clone --depth 1 -b v1.6.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
 #RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
