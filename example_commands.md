@@ -8,18 +8,41 @@ absolute paths.
 
 ```shell
 docker run -it --rm --net cbio-net \
-    -v "$PWD"/study-dir:/study:ro \
-    -v "$HOME"/Desktop:/outdir \
+    -v "$PWD/study-dir:/study:ro" \
+    -v "$HOME/Desktop:/outdir" \
     cbioportal-image \
     metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
 ```
 :warning: after importing a study, remember to restart `cbioportal-container` to see the study in the home page. Run `docker restart cbioportal-container`
 
+#### Using cached portal side-data ####
+
+In some setups the data validation step may not have direct access to the web API, for instance when the web API is only accessible to authenticated browser sessions. You can use this command to generate a cached folder of files that the validation script can use instead:
+
+```shell
+docker run --rm --net cbio-net \
+    -v "$PWD/portalinfo:/portalinfo" \
+    -w /cbioportal/core/src/main/scripts \
+    cbioportal-image \
+    ./dumpPortalInfo.pl /portalinfo
+```
+
+Then, grant the validation/loading command access to this folder and tell the script it to use it instead of the API:
+
+```shell
+docker run -it --rm --net cbio-net \
+    -v "$PWD/study-dir:/study:ro" \
+    -v "$HOME/Desktop:/outdir" \
+    -v "$PWD/portalinfo:/portalinfo:ro" \
+    cbioportal-image \
+    metaImport.py -p /portalinfo -s /study --html=/outdir/report.html
+```
+
 ### Importing data (method 2) ###
 
 Similar to the method above, but here you open a bash shell in an otherwise idle container and run the commands there.
 
-###### Step 1 (one time only for a specific image)
+#### Step 1 (one time only for a specific image) ####
 
 Set up the container `importer-container` mapping the input and
 output dirs with `-v` parameters, and keep it running idle in the
@@ -34,7 +57,7 @@ docker run -d --name="importer-container" \
   cbioportal-image tail -f /dev/null
 ```
 
-###### Step 2
+#### Step 2 ####
 
 Run bash in the container and execute the import command.
 
