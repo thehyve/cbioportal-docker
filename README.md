@@ -4,14 +4,15 @@ Download and install Docker from www.docker.com.
 
 [Notes for non-Linux systems](notes-for-non-linux.md)
 
+## Usage instructions ##
 
-#### Step 1 - Setup network
+### Step 1 - Setup network ###
 Create a network in order for the cBioPortal container and mysql database to communicate.
 ```
 docker network create cbio-net
 ```
 
-#### Step 2 - Run mysql with seed database
+### Step 2 - Run mysql with seed database ###
 Download the seed database from [cBioPortal Datahub]( https://github.com/cBioPortal/datahub/blob/bee2a285d4c93cd658b5af30ace6fc33192d8190/seedDB/README.md).
 
 :warning: Please replace `/<path_to_seed_database>/cbioportal-seed_<genome_build>_<seed_version>` with the path and name of the downloaded seed database. The command below imports the seed database files into a MySQL database stored in `/<path_to_save_mysql_db>/db_files/`. These should be absolute paths.
@@ -39,7 +40,7 @@ docker logs -f cbioDB
 ```
 If any error occurs, make sure to check it. A common cause is pointing the `-v` parameters above to folders or files that do not exist.
 
-#### Step 3 - Build the Docker image containing cBioPortal
+### Step 3 - Build the Docker image containing cBioPortal ###
 Checkout the repository, enter the directory and run build the image.
 
 ```
@@ -59,7 +60,7 @@ have a look [here](adjusting_portal.properties_configuration.md).
 If you want to build an image based on a different branch, you can
 read [this](adjusting_Dockerfile_configuration.md).
 
-#### Step 4 - Update the database schema
+### Step 4 - Update the database schema ###
 Update the seeded database schema to match the cBioPortal version
 in the image, by running the following command. Note that this will
 most likely make your database irreversibly incompatible with older
@@ -71,7 +72,7 @@ docker run --rm -it --net cbio-net \
     migrate_db.py -p /cbioportal/src/main/resources/portal.properties -s /cbioportal/db-scripts/src/main/resources/migration.sql
 ```
 
-#### Step 5 - Run the cBioPortal web server
+### Step 5 - Run the cBioPortal web server ###
 ```
 docker run -d --restart=always \
     --name=cbioportal-container \
@@ -96,7 +97,11 @@ Activity of Docker containers can be seen with:
 docker ps -a
 ```
 
-## Uninstalling cBioPortal
+## Data loading & more commands ##
+
+For more uses of the cBioPortal image, see [example_commands.md](example_commands.md)
+
+## Uninstalling cBioPortal ##
 First we stop the Docker containers.
 ```
 docker stop cbioDB
@@ -119,7 +124,3 @@ Finally we remove the cached Docker images.
 docker rmi mysql
 docker rmi cbioportal-image
 ```
-
-## Data Loading & More commands
-
-For more uses of the cBioPortal image, see [example_commands.md](example_commands.md)
