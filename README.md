@@ -1,6 +1,8 @@
-# cbioportal-docker
+# cbioportal-docker @ The Hyve
 
-Download and install Docker from www.docker.com.
+The [cBioPortal](https://github.com/cBioPortal/cbioportal) project documents a setup to deploy a cBioPortal server using Docker, in [this section of the documentation](https://cbioportal.readthedocs.io/en/latest/#docker). As cBioPortal traditionally does not distinguish between build-time and deploy-time configuration, the setup documented there builds the application at runtime, and suggests running auxiliary commands in the same container as the webserver. The above approach may sacrifice a few advantages of using Docker by going against some of its idioms. For this reason, the project you are currently looking at documents an alternative setup, which builds a ready-to-run cBioPortal application into a Docker image.
+
+To get started, download and install Docker from www.docker.com.
 
 [Notes for non-Linux systems](notes-for-non-linux.md)
 
@@ -15,7 +17,7 @@ docker network create cbio-net
 ### Step 2 - Run mysql with seed database ###
 Download the seed database from [cBioPortal Datahub]( https://github.com/cBioPortal/datahub/blob/bee2a285d4c93cd658b5af30ace6fc33192d8190/seedDB/README.md).
 
-:warning: Please replace `/<path_to_seed_database>/cbioportal-seed_<genome_build>_<seed_version>` with the path and name of the downloaded seed database. The command below imports the seed database files into a MySQL database stored in `/<path_to_save_mysql_db>/db_files/`. These should be absolute paths.
+:warning: Make sure to replace `/<path_to_seed_database>/cbioportal-seed_<genome_build>_<seed_version>` with the path and name of the downloaded seed database. The command below imports the seed database files into a MySQL database stored in `/<path_to_save_mysql_db>/db_files/`. These should be absolute paths.
 
 :information_source: The protein database (PDB) data is relatively large and can therefore take 45 minutes to load. You can skip loading this part of the seed database by removing the line that loads `cbioportal-seed_<genome_build>_<seed_version>_only-pdb.sql.gz`. Please note that your instance will be missing the 3D structure view feature (in the mutations view) if you chose to leave this out.
 
