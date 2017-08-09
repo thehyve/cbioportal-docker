@@ -4,7 +4,7 @@ The [cBioPortal](https://github.com/cBioPortal/cbioportal) project documents a s
 
 To get started, download and install Docker from www.docker.com.
 
-[Notes for non-Linux systems](notes-for-non-linux.md)
+[Notes for non-Linux systems](docs/notes-for-non-linux.md)
 
 ## Usage instructions ##
 
@@ -58,9 +58,9 @@ docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.gi
 ```
 
 If you want to change any variable defined in portal.properties,
-have a look [here](adjusting_portal.properties_configuration.md).
+have a look [here](docs/adjusting_portal.properties_configuration.md).
 If you want to build an image based on a different branch, you can
-read [this](adjusting_Dockerfile_configuration.md).
+read [this](docs/adjusting_Dockerfile_configuration.md).
 
 ### Step 4 - Update the database schema ###
 Update the seeded database schema to match the cBioPortal version
@@ -89,7 +89,7 @@ set the `-Xms` and `-Xmx` options to the same number. This should
 increase performance of certain memory-intensive web services such
 as computing the data for the co-expression tab. If you are using
 MacOS or Windows, make sure to take a look at [these
-notes](notes-for-non-linux.md) to allocate more memory for the
+notes](docs/notes-for-non-linux.md) to allocate more memory for the
 virtual machine in which all Docker processes are running.
 
 cBioPortal can now be reached at http://localhost:8081/cbioportal/
@@ -101,7 +101,7 @@ docker ps -a
 
 ## Data loading & more commands ##
 
-For more uses of the cBioPortal image, see [example_commands.md](example_commands.md)
+For more uses of the cBioPortal image, see [this file](docs/example_commands.md)
 
 ## Uninstalling cBioPortal ##
 First we stop the Docker containers.
