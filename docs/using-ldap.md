@@ -1,6 +1,13 @@
 # Set up LDAP locally for testing #
 
-TODO: introduce that LDAP is a directory database
+LDAP is a protocol to access services representing data in the shape
+of a directory. Roughly, a directory is a browsable hierarchy of
+_entries_, each of which can have a number of _attributes_. The
+semantics of the attributes is defined in a schema. This information
+model is rather different from the table-based one you might be
+familiar with from relational databases. It is often used to represent
+details of persons grouped by units of an organisation, or
+specifically for those persons' user account details.
 
 I forked the Docker image building context for
 [`dinkel/openldap`](https://hub.docker.com/r/dinkel/openldap/);
@@ -36,25 +43,39 @@ docker run -d --restart=always \
     openldap:withtools
 ```
 
-TODO: mention object classes and associate attributes with classes
-
 To add user entries to this database, create an LDIF file defining
-their uniquely qualified ‘distinguished names’ (`dn`), their surnames
-(`sn`), and their ‘common names’ (`cn`), among any other attributes.
+their uniquely qualified _distinguished names_ (`dn`), the _object
+class_ of the entries that you use to represent your user details,
+and any _attributes_ that have been defined to make sense for these
+object classes. A nicely browsable list of commonly used classes can
+be found [here](http://www.zytrax.com/books/ldap/ape/). The
+distinguished name places the entries somewhere in the tree, often in
+terms of internet domain components (`dc`) and organisational units
+(`ou`).
+
+In this example, the `inetOrgPerson` class requires them to have
+surnames (the `sn` attribute), and common names (`cn`), and states
+that it makes sense for them to have email addresses (`mail`) and user
+IDs (`uid`), among other attributes.
 
 ```ldif
-dn: cn=Foo Vanderfoo,dc=cbio,dc=local
+dn: ou=people,dc=cbio,dc=local
+objectclass: organizationalUnit
+ou: people
+
+dn: uid=foo,ou=people,dc=cbio,dc=local
 objectclass: inetOrgPerson
-objectclass: organizationalPerson
+uid: foo
 sn: Vanderfoo
 cn: Foo Vanderfoo
 cn: Van the Man
 
-dn: cn=Bar Barson,dc=cbio,dc=local
+dn: uid=bar,ou=people,dc=cbio,dc=local
 objectclass: inetOrgPerson
-objectclass: organizationalPerson
+uid: bar
 sn: Barson
 cn: Bar Barson
+mail: bar@cbio.local
 ```
 
 These users can then be loaded into the database by running ldapadd in
@@ -72,3 +93,5 @@ docker run --rm -it \
 ```
 
 TODO: add passwords, ldappasswd?
+
+TODO: document `ldapsearch` for searching the tree and `ldapdelete` for deleting entries
