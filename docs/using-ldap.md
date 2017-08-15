@@ -68,7 +68,7 @@ objectclass: inetOrgPerson
 uid: foo
 sn: Vanderfoo
 cn: Foo Vanderfoo
-cn: Van the Man
+cn: Foo Tiberius Vanderfoo
 
 dn: uid=bar,ou=people,dc=cbio,dc=local
 objectclass: inetOrgPerson
