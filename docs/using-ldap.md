@@ -106,6 +106,29 @@ docker run --rm -it \
         uid=foo,ou=people,dc=cbio,dc=local
 ```
 
-TODO: document `ldapsearch` for searching the tree and `ldapdelete` for deleting entries
+You can use the `ldapsearch` command to look at the data in the
+database. The command line below will list the surnames and common
+names of any entries that have a surname starting with _van_ within
+our domain, displayed in a minimal format (specified by `-LLL`).
+
+```shell
+docker run --rm -it \
+    --net=authnet \
+    openldap:withtools \
+    ldapsearch -H ldap://ldap-server -xWD cn=admin,dc=cbio,dc=local \
+        -LLL -b dc=cbio,dc=local '(sn=van*)' sn cn
+```
+
+The argument to `-b` specifies the subtree to be searched, the
+parenthesised text is a filter string (other operators are available
+for more complex queries), and the enumeration of attribute types
+specifies which attributes to display. The latter two both default to
+displaying all if left out.
+
+See the man page on the
+[`ldapmodify(1)`](https://manpages.debian.org/stretch/ldap-utils/ldapmodify.1.en.html)
+command to modify entries according to specifications in the LDIF
+format, or try `ldapdelete(1)` to delete individual entries or
+recursively delete subtrees.
 
 TODO: suggest a bind role with read-only access
