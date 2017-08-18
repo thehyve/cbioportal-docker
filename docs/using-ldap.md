@@ -92,6 +92,20 @@ docker run --rm -it \
     ldapadd -H ldap://ldap-server -xWD cn=admin,dc=cbio,dc=local -f /in.ldif
 ```
 
-TODO: add passwords, ldappasswd?
+Next, the users should be granted passwords so that they can log
+in. This will (for now) set the `userPassword` attributes of the user
+entries, storing salted SHA-1 hashes. The following command will
+prompt for a password for the first user in the example file above,
+while (again) authenticating as the admin user to make the change:
+
+```shell
+docker run --rm -it \
+    --net=authnet \
+    openldap:utils \
+    ldappasswd -H ldap://ldap-server -xWD cn=admin,dc=cbio,dc=local -S \
+        uid=foo,ou=people,dc=cbio,dc=local
+```
 
 TODO: document `ldapsearch` for searching the tree and `ldapdelete` for deleting entries
+
+TODO: suggest a bind role with read-only access
