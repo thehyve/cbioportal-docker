@@ -25,7 +25,7 @@ docker run -d --restart=always \
     -v "$PWD/kcdb-files:/var/lib/mysql" \
     -e MYSQL_DATABASE=keycloak \
     -e MYSQL_USER=keycloak \
-    -e MYSQL_PASSWORD=keycloak \
+    -e MYSQL_PASSWORD=password \
     -e MYSQL_ROOT_PASSWORD=root_password \
     mysql
 ```
