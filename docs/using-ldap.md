@@ -101,7 +101,7 @@ while (again) authenticating as the admin user to make the change:
 ```shell
 docker run --rm -it \
     --net=authnet \
-    openldap:utils \
+    openldap:withtools \
     ldappasswd -H ldap://ldap-server -xWD cn=admin,dc=cbio,dc=local -S \
         uid=foo,ou=people,dc=cbio,dc=local
 ```
