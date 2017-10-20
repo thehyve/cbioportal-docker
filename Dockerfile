@@ -7,7 +7,7 @@
 FROM tomcat:8-jre8
 MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 
-# install build and runtime dependencies
+# install build and runtime dependencies and configure Tomcat for production
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		git \
 		libmysql-java \
@@ -19,9 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python-mysqldb \
 		python-requests \
 	&& rm -rf /var/lib/apt/lists/* \
-	# set up Tomcat to use the MySQL Connector/J Java connector
 	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
-	# remove webapps that come with Tomcat for security reasons
 	&& rm -rf $CATALINA_HOME/webapps/*m* 
 	
 
@@ -36,16 +34,15 @@ WORKDIR $PORTAL_HOME
 # add buildtime configuration
 COPY ./portal.properties.patch /root/
 
-# install default config files, build and install
+# install default config files, build and install, placing the scripts jar back
+# in the target folder where import scripts expect it after cleanup
 RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
 	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
 	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean package \
 	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
-	# save the scripts jar so Maven does not clean it up
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
-	# install the scripts jar to the target folder, where import scripts expect it
 	&& mkdir scripts/target/ \
 	&& mv /root/scripts-*.jar scripts/target/
 
