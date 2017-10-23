@@ -26,19 +26,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV PORTAL_HOME=/cbioportal
 COPY pom.xml                                     $PORTAL_HOME/
 WORKDIR $PORTAL_HOME
-COPY business/pom.xml                            business/
-COPY core/pom.xml                                core/
-COPY db-scripts/pom.xml                          db-scripts/
-COPY model/pom.xml                               model/
-COPY persistence/pom.xml                         persistence/
-COPY persistence/persistence-api/pom.xml         persistence/persistence-api/
-COPY persistence/persistence-mybatis/pom.xml     persistence/persistence-mybatis/
-COPY portal/pom.xml                              portal/
-COPY scripts/pom.xml                             scripts/
-COPY security/pom.xml                            security/
-COPY security/security-spring/pom.xml            security/security-spring/
-COPY service/pom.xml                             service/
-COPY web/pom.xml                                 web/
+# list of subproject POM files:
+# find . -mindepth 2 -not \( -path '*/target/*' -or -path '*/frontend-cbioportal/*' \)  -name pom.xml \
+# | sed -e 's/^\.\/\(.*\)\/pom.xml$/COPY \1\/pom.xml#\1\//' | column -ts '#'
+COPY business/pom.xml                         business/
+COPY core/pom.xml                             core/
+COPY db-scripts/pom.xml                       db-scripts/
+COPY model/pom.xml                            model/
+COPY persistence/pom.xml                      persistence/
+COPY persistence/persistence-api/pom.xml      persistence/persistence-api/
+COPY persistence/persistence-mybatis/pom.xml  persistence/persistence-mybatis/
+COPY portal/pom.xml                           portal/
+COPY scripts/pom.xml                          scripts/
+COPY security/pom.xml                         security/
+COPY security/security-spring/pom.xml         security/security-spring/
+COPY service/pom.xml                          service/
+COPY web/pom.xml                              web/
 RUN mvn dependency:go-offline --fail-never
 
 # include the rest of the cBioPortal sources
