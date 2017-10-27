@@ -8,7 +8,7 @@ Run:
 sudo docker stop apache-proxy; \
 sudo docker rm apache-proxy; \
 sudo docker build -t my-apache2 . ; \
-sudo docker run -dit   --name=apache-proxy  --net=cbio-net  -v "$PWD":/usr/local/apache2/htdocs/   -p 8888:80 -p 10443:443    my-apache2; \
+sudo docker run -dit   --name=apache-proxy  --net=cbio-net  -v "$PWD":/usr/local/apache2/htdocs/   -p 443:443 -p 10443:10443    my-apache2; \
 sudo docker ps; \
 sudo docker logs apache-proxy;
 ```
@@ -91,9 +91,8 @@ For keycloak:
 <VirtualHost *:10443>
 
   SSLEngine on
-  SSLCertificateChainFile /etc/ssl/cbio_https/cert.pem
-  SSLCertificateFile /etc/ssl/cbio_https/cert.pem
-  SSLCertificateKeyFile /etc/ssl/cbio_https/key.nopass.pem
+  SSLCertificateFile /etc/ssl/cbio_https/cert.crt
+  SSLCertificateKeyFile /etc/ssl/cbio_https/key.key
 
   # ServerName yourserver.com
   ServerName localhost
