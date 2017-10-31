@@ -3,7 +3,7 @@
 This guide describes a way to Dockerise Keycloak along with
 cBioPortal, for authentication as described in
 the
-[cBioPortal documentation](https://cbioportal.readthedocs.io/en/latest/Authenticating-Users-via-keycloak-SAML.html#introduction).
+[cBioPortal documentation](https://cbioportal.readthedocs.io/en/latest/Authenticating-and-Authorizing-Users-via-keycloak.html#introduction).
 
 First, create an isolated network in which the Keycloak and MySQL
 servers can talk to one another.
@@ -30,13 +30,14 @@ docker run -d --restart=always \
     mysql
 ```
 
-Then run the actual Keycloak server, using the MySQL-compatible
-version of
-[the Keycloak images](https://github.com/jboss-dockerfiles/keycloak)
+Then run the actual Keycloak server, using
+[this image](https://hub.docker.com/r/jboss/keycloak/)
 available from Docker Hub. This will by default connect to the
 database using the (non-root) credentials in the example above. The
 server will be accessible to the outside world on port 8180, so make
 sure to choose a strong administrator password.
+
+The command below uses the default values for `MYSQL_DATABASE`, `MYSQL_USER` and `MYSQL_PASSWORD` (listed in the command above). If you wish to change these credentials, specify them in the command below. For instance, if `MYSQL_USER` in the database container is `user`, you need to add `-e MYSQL_USER=user`.
 
 ```
 docker run -d --restart=always \
@@ -47,11 +48,12 @@ docker run -d --restart=always \
     -e MYSQL_PORT_3306_TCP_PORT=3306 \
     -e KEYCLOAK_USER=admin \
     -e "KEYCLOAK_PASSWORD=<admin_password_here>" \
-    jboss/keycloak-mysql
+    -e DB_VENDOR="MYSQL" \
+    jboss/keycloak
 ```
 
 Finally, configure Keycloak and cBioPortal as explained in the
-[cBioPortal documentation](https://cbioportal.readthedocs.io/en/latest/Authenticating-Users-via-keycloak-SAML.html#configure-keycloak-to-authenticate-your-cbioportal-instance).
+[cBioPortal documentation](https://cbioportal.readthedocs.io/en/latest/Authenticating-and-Authorizing-Users-via-keycloak.html#configure-keycloak-to-authenticate-your-cbioportal-instance).
 Click [here](adjusting_portal.properties_configuration.md) for an
 explanation on how to adjust portal properties used when building a
 Docker image for cBioPortal, and remember to specify port 8180 for the
