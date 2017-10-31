@@ -1,2 +1,7 @@
 .git
+.project
+.pydevproject
+.classpath
+.DS_Store
+target
 portal.properties
