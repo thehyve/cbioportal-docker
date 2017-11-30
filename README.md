@@ -15,29 +15,47 @@ docker network create cbio-net
 ```
 
 ### Step 2 - Run mysql with seed database ###
-Download the seed database from [cBioPortal Datahub](https://github.com/cBioPortal/datahub/blob/master/seedDB/README.md).
-
-:warning: Make sure to replace `/<path_to_seed_database>/cbioportal-seed_<genome_build>_<seed_version>` with the path and name of the downloaded seed database. The command below imports the seed database files into a MySQL database stored in `/<path_to_save_mysql_db>/db_files/`. These should be absolute paths.
+Start a MySQL server. The command below stores the database in a folder named
+`/<path_to_save_mysql_db>/db_files/`. This should be an absolute path, that
+does *not* point to a directory already containing database files.
 
 ```
 docker run -d --restart=always \
-  --name='cbioDB' \
+  --name=cbioDB \
   --net=cbio-net \
-  -e MYSQL_ROOT_PASSWORD=P@ssword1 \
+  -e MYSQL_ROOT_PASSWORD='P@ssword1' \
   -e MYSQL_USER=cbio \
-  -e MYSQL_PASSWORD=P@ssword1 \
+  -e MYSQL_PASSWORD='P@ssword1' \
   -e MYSQL_DATABASE=cbioportal \
   -v /<path_to_save_mysql_db>/db_files/:/var/lib/mysql/ \
-  -v /<path_to_seed_database>/cgds.sql:/docker-entrypoint-initdb.d/cgds.sql:ro \
-  -v /<path_to_seed_database>/seed-cbioportal_<genome_build>_<seed_version>.sql.gz:/docker-entrypoint-initdb.d/seed-cbioportal.sql.gz:ro \
   mysql
 ```
 
-Make sure to follow the logs of this step to ensure no errors occur. Run this command:
+Download the seed database from the
+[cBioPortal Datahub](https://github.com/cBioPortal/datahub/blob/master/seedDB/README.md),
+and use the command below to upload the seed data to the server started above.
+
+Make sure to replace
+`/<path_to_seed_database>/seed-cbioportal_<genome_build>_<seed_version>.sql.gz`
+with the path and name of the downloaded seed database. Again, this should be
+an absolute path.
+
 ```
-docker logs -f cbioDB
+docker run \
+  --name=load-seeddb \
+  --net=cbio-net \
+  -e MYSQL_USER=cbio \
+  -e MYSQL_PASSWORD='P@ssword1' \
+  -v /<path_to_seed_database>/cgds.sql:/mnt/cgds.sql:ro \
+  -v /<path_to_seed_database>/seed-cbioportal_<genome_build>_<seed_version>.sql.gz:/mnt/seed.sql.gz:ro \
+  mysql \
+  sh -c 'cat /mnt/cgds.sql | mysql -hcbioDB -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" cbioportal \
+      && zcat /mnt/seed.sql.gz |  mysql -hcbioDB -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" cbioportal'
 ```
-If any error occurs, make sure to check it. A common cause is pointing the `-v` parameters above to folders or files that do not exist.
+
+Follow the logs of this step to ensure that no errors occur. If any error
+occurs, make sure to check it. A common cause is pointing the `-v` parameters
+above to folders or files that do not exist.
 
 ### Step 3 - Build the Docker image containing cBioPortal ###
 Checkout the repository, enter the directory and run build the image.
