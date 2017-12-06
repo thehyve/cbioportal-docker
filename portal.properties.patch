@@ -48,6 +48,13 @@
  # bitly, please use your bitly user and apiKey
 -bitly.url=http://api.bit.ly/shorten?login=[bitly.user]&apiKey=[bitly.apiKey]&
 +bitly.url=
+ # the new API uses the v3 of bitly API, and a java library to make the API call, so you only need to provide the access token  
+ bitly.access.token=
  
- # google analytics
- google_analytics_profile_id=
+@@ -227,4 +227,4 @@
+ # oncoprint.hide_passenger.default=true
+ 
+ # Change this to custom file (e.g. file:/<path>) to have a custom set of genes in query page:
+-# querypage.setsofgenes.location =
+\ No newline at end of file
++# querypage.setsofgenes.location =
