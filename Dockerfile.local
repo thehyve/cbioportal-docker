@@ -52,7 +52,7 @@ COPY . $PORTAL_HOME
 RUN mv ./portal.properties src/main/resources/portal.properties \
 	&& mv ./log4j.properties src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean package \
-	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
 	&& mkdir scripts/target/ \
