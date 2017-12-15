@@ -23,6 +23,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf $CATALINA_HOME/webapps/*m* 
 
 # include Maven configs to fetch additional Java dependencies listed there
+# starting with the dependencies of the backend projects, which change
+# significantly less often than the externally maintained frontend code
 ENV PORTAL_HOME=/cbioportal
 COPY pom.xml                                     $PORTAL_HOME/
 WORKDIR $PORTAL_HOME
@@ -36,12 +38,13 @@ COPY model/pom.xml                            model/
 COPY persistence/pom.xml                      persistence/
 COPY persistence/persistence-api/pom.xml      persistence/persistence-api/
 COPY persistence/persistence-mybatis/pom.xml  persistence/persistence-mybatis/
-COPY portal/pom.xml                           portal/
 COPY scripts/pom.xml                          scripts/
 COPY security/pom.xml                         security/
 COPY security/security-spring/pom.xml         security/security-spring/
 COPY service/pom.xml                          service/
 COPY web/pom.xml                              web/
+RUN for subproject in */.; do cd "$subproject"; mvn dependency:go-offline --fail-never; cd ..; done
+COPY portal/pom.xml                           portal/
 RUN mvn dependency:go-offline --fail-never
 
 # include the rest of the cBioPortal sources
