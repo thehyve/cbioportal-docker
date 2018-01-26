@@ -32,13 +32,11 @@ WORKDIR $PORTAL_HOME
 #       && git checkout commit_hash_in_branch
 
 # add buildtime configuration
-COPY ./portal.properties.patch /root/
+COPY ./portal.properties src/main/resources/portal.properties
 
 # install default config files, build and install, placing the scripts jar back
 # in the target folder where import scripts expect it after cleanup
-RUN cp src/main/resources/portal.properties.EXAMPLE src/main/resources/portal.properties \
-	&& patch src/main/resources/portal.properties </root/portal.properties.patch \
-	&& cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
+RUN cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean package \
 	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
 	&& mv scripts/target/scripts-*.jar /root/ \
