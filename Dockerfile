@@ -33,11 +33,11 @@ WORKDIR $PORTAL_HOME
 
 # add buildtime configuration
 COPY ./portal.properties src/main/resources/portal.properties
+COPY ./log4j.properties src/main/resources/log4j.properties
 
 # install default config files, build and install, placing the scripts jar back
 # in the target folder where import scripts expect it after cleanup
-RUN cp src/main/resources/log4j.properties.EXAMPLE src/main/resources/log4j.properties \
-	&& mvn -DskipTests clean package \
+RUN mvn -DskipTests clean package \
 	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
