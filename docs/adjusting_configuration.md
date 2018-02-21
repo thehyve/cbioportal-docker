@@ -25,10 +25,10 @@ RUN git fetch https://github.com/cbioportal/cbioportal.git rc \
 ## Build the new Docker image
 Once you have done your changes, you can build the image by going to your cBioPortal Docker directory and typing:
 ```
-docker build -t cbioportal .
+docker build -t cbioportal-image .
 ```
 
 You could include a version to the image name by using a `:`. For example:
 ```
-docker build -t cbioportal:1.11.2 .
+docker build -t cbioportal-image:1.11.2 .
 ```
