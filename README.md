@@ -73,10 +73,10 @@ docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.gi
 ```
 
 If you want to change any variable defined in portal.properties,
-have a look [here](docs/adjusting_portal.properties_configuration.md).
+have a look [here](docs/adjusting_configuration.md#customize-cbioportal-configuration).
 If you want to build an image based on a different branch, you can
-read [this](docs/adjusting_Dockerfile_configuration.md). And to
-Dockerise a Keycloak authentication service alongside cBioPortal,
+read [this](docs/adjusting_configuration.md#use-a-different-cbioportal-branch). And to
+Dockerize a Keycloak authentication service alongside cBioPortal,
 see [this file](docs/using-keycloak.md).
 
 ### Step 4 - Update the database schema ###
