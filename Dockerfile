@@ -20,16 +20,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python-requests \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
-	&& rm -rf $CATALINA_HOME/webapps/*m* 
-	
+	&& rm -rf $CATALINA_HOME/webapps/*m*
+
+ARG BRANCH=master
+ARG COMMIT=
+ARG REPOSITORY=https://github.com/cBioPortal/cbioportal.git
+
+LABEL thehyve.cbioportal.commit="${COMMIT}" thehyve.cbioportal.branch="${BRANCH}" thehyve.cbioportal.repository="${REPOSITORY}"
+LABEL thehyve.dockerfile.repository="https://github.com/thehyve/cbioportal-docker.git"
+
+ENV PORTAL_HOME=/cbioportal
 
 # fetch the cBioPortal sources and version control metadata
-ENV PORTAL_HOME=/cbioportal
-RUN git clone --depth 1 -b v1.11.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
-WORKDIR $PORTAL_HOME
+RUN echo "git clone --single-branch --depth 1 -b ${BRANCH} ${REPOSITORY} ${PORTAL_HOME}" ; git clone --single-branch --depth 1 -b ${BRANCH} ${REPOSITORY} ${PORTAL_HOME} 2> /dev/null
 
-#RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
-#       && git checkout commit_hash_in_branch
+WORKDIR ${PORTAL_HOME}
+
+RUN if [ "${COMMIT}" != "" ] ; then git fetch --unshallow ${REPOSITORY} ; git checkout ${COMMIT} 2> /dev/null ; fi
 
 # add buildtime configuration
 COPY ./portal.properties src/main/resources/portal.properties
