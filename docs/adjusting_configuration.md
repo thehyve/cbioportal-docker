@@ -14,10 +14,10 @@ diff portal.properties portal.properties.EXAMPLE
 
 The default configuration to run containers creates an image based on the current version of cBioPortal. The branch used to build the image is specified in the Dockerfile.
 
-To use a different branch, you must know the branch and commit name `<branch_name>` `<commit>`you want to use to your image, and specify them when you create image:
+To use a different branch, you must know the branch name and commit sha1 `<branch_name>` `<commit_sha1>` you want to use to your image, and specify them when you create image:
 
 ```
-docker build --no-cache -t cbioportal-image  --build-arg BRANCH=<branch_name> COMMIT=<commit> .  
+docker build --no-cache -t cbioportal-image  --build-arg BRANCH=<branch_name> COMMIT=<commit_sha1> .  
 ```
 
 Check result with inspect docker command
