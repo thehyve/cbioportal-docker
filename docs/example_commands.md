@@ -111,7 +111,7 @@ docker run --rm \
 When creating the database container, you can map a port on the
 local host to port 3306 of the container running the MySQL database,
 by adding an option such as `-p 127.0.0.1:8306:3306` to the `docker
-run` command before the name of the image (`mysql`).  You can then
+run` command before the name of the image (`mysql:5.7`).  You can then
 connect to this port (port 8306 in this example) using [MySQL
 Workbench](https://www.mysql.com/products/workbench/) or another
 MySQL client.
@@ -127,6 +127,6 @@ docker run -it --rm \
     -e MYSQL_USER=cbio \
     -e MYSQL_PASSWORD=P@ssword1 \
     -e MYSQL_DATABASE=cbioportal \
-    mysql \
+    mysql:5.7 \
     sh -c 'mysql -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"'
 ```

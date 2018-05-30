@@ -28,7 +28,7 @@ docker run -d --restart=always \
   -e MYSQL_PASSWORD='P@ssword1' \
   -e MYSQL_DATABASE=cbioportal \
   -v /<path_to_save_mysql_db>/db_files/:/var/lib/mysql/ \
-  mysql
+  mysql:5.7
 ```
 
 Download the seed database from the
@@ -48,7 +48,7 @@ docker run \
   -e MYSQL_PASSWORD='P@ssword1' \
   -v /<path_to_seed_database>/cgds.sql:/mnt/cgds.sql:ro \
   -v /<path_to_seed_database>/seed-cbioportal_<genome_build>_<seed_version>.sql.gz:/mnt/seed.sql.gz:ro \
-  mysql \
+  mysql:5.7 \
   sh -c 'cat /mnt/cgds.sql | mysql -hcbioDB -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" cbioportal \
       && zcat /mnt/seed.sql.gz |  mysql -hcbioDB -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" cbioportal'
 ```
@@ -140,6 +140,6 @@ docker images
 
 Finally we remove the cached Docker images.
 ```
-docker rmi mysql
+docker rmi mysql:5.7
 docker rmi cbioportal-image
 ```
