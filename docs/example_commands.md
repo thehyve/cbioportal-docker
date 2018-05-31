@@ -38,6 +38,24 @@ docker run -it --rm --net cbio-net \
     metaImport.py -p /portalinfo -s /study --html=/outdir/report.html
 ```
 
+#### Public data sets ####
+A catalogue of compatible public study data can be found in
+[this snapshot of the Datahub project](https://github.com/cBioPortal/datahub/tree/47c1c0a987ee2873b3f043252ea077df3146d86b/public).
+Use one of the methods described in
+[this Stack Overflow discussion](https://stackoverflow.com/questions/7106012/download-a-single-folder-or-directory-from-a-github-repo)
+to download study folders you're interested in, or install `git` and `git-lfs`
+and run commands such as the following:
+```
+git  clone --single-branch -b rc https://github.com/cBioPortal/datahub.git
+cd datahub
+git checkout 47c1c0a987ee2873b3f043252ea077df3146d86b
+git lfs install --local --skip-smudge
+cd public
+git lfs pull -I brca_tcga
+```
+Substituting any data set you may want for the TCGA provisional breast cancer
+study.
+
 ### Importing data (method 2) ###
 
 Similar to the method above, but here you open a bash shell in an otherwise idle container and run the commands there.
