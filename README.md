@@ -120,6 +120,10 @@ docker ps -a
 
 For more uses of the cBioPortal image, see [this file](docs/example_commands.md)
 
+To build images from development source
+rather than stable releases or snapshots, see
+[development.md](docs/development.md).
+
 ## Uninstalling cBioPortal ##
 First we stop the Docker containers.
 ```
