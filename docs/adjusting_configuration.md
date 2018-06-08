@@ -9,17 +9,31 @@ diff portal.properties portal.properties.EXAMPLE
 ```
 
 ## Use a different cBioPortal branch
-The default configuration to run containers creates an image based on the current version of cBioPortal. The branch used to build the image is specified in the Dockerfile. 
 
-To use a different branch, you must know the branch name and the latest commit of this branch that you want to apply to your image, and specify them in the `Dockerfile`. For instance, if you want to build a cBioPortal image based on commit `6b9356aecdce4068543156e6b1b4509ce89cae66` of `rc`, you should find this part in Dockerfile:
+The default configuration to run containers creates an image based on
+the latest version of cBioPortal known to work out of the box.
+The release used to build the image is specified in the Dockerfile.
+
+To use a different snapshot, you should find the tag/branch name and the commit
+that you want to base your image on, and specify them in the `Dockerfile`.
+Use `git` to check out the repository, and edit the Dockerfile:
+
 ```
-#RUN git fetch https://github.com/thehyve/cbioportal.git my_development_branch \
-#       && git checkout commit_hash_in_branch
+git clone https://github.com/thehyve/cbioportal-docker.git
+cd cbioportal-docker
+nano Dockerfile
+```
+For instance, if you want to build a cBioPortal image based on commit
+`6b9356aecdce4068543156e6b1b4509ce89cae66` of the `rc` branch,
+you should find the line in the Dockerfile that looks like this:
+
+```
+RUN git clone --depth 1 -b v1.xx.x 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 ```
 and replace it with:
 ```
-RUN git fetch https://github.com/cbioportal/cbioportal.git rc \
-       && git checkout 6b9356aecdce4068543156e6b1b4509ce89cae66
+RUN git clone --single-branch -b rc 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME \
+    && git checkout 6b9356aecdce4068543156e6b1b4509ce89cae66
 ```
 
 ## Build the new Docker image
@@ -30,5 +44,5 @@ docker build -t cbioportal-image .
 
 You could include a version to the image name by using a `:`. For example:
 ```
-docker build -t cbioportal-image:1.11.2 .
+docker build -t cbioportal-image:my-rc-snapshot.
 ```
