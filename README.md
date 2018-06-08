@@ -72,14 +72,10 @@ Alternatively, if you do not wish to change anything in the Dockerfile or the pr
 docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.git
 ```
 
-If you want to change any variable defined in portal.properties,
-have a look [here](docs/adjusting_configuration.md#customize-cbioportal-configuration).
-If you want to build an image based on a different branch, you can
-read [this](docs/adjusting_configuration.md#use-a-different-cbioportal-branch). And to
-Dockerize a Keycloak authentication service alongside cBioPortal,
-see [this file](docs/using-keycloak.md).
+If you want to build a different release of cBioPortal, read [this](docs/adjusting_configuration.md#use-a-different-cbioportal-branch).
 
 ### Step 4 - Update the database schema ###
+
 Update the seeded database schema to match the cBioPortal version
 in the image, by running the following command. Note that this will
 most likely make your database irreversibly incompatible with older
@@ -91,7 +87,15 @@ docker run --rm -it --net cbio-net \
     migrate_db.py -p /cbioportal/src/main/resources/portal.properties -s /cbioportal/db-scripts/src/main/resources/migration.sql
 ```
 
-### Step 5 - Run the cBioPortal web server ###
+### Step 5 - Configure and customise your portal ###
+
+If you want to change any variable defined in portal.properties,
+have a look
+[here](docs/adjusting_configuration.md#customize-cbioportal-configuration).
+And to Dockerize a Keycloak authentication service alongside cBioPortal,
+see [this file](docs/using-keycloak.md).
+
+### Step 6 - Run the cBioPortal web server ###
 ```
 docker run -d --restart=always \
     --name=cbioportal-container \
