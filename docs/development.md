@@ -38,3 +38,8 @@ docker run --rm \
   -p 8081:8080 \
   cbioportal:my-local-source-dir
 ```
+
+PS --
+when testing integration of the frontend project in production context like this,
+run `NODE_ENV=production ./node_modules/.bin/webpack --watch`
+to continuously reflect changes to the frontend source.
