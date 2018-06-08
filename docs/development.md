@@ -41,5 +41,8 @@ docker run --rm \
 
 PS --
 when testing integration of the frontend project in production context like this,
-run `NODE_ENV=production ./node_modules/.bin/webpack --watch`
+run
+```shell
+NODE_ENV=production ./node_modules/.bin/webpack --watch
+```
 to continuously reflect changes to the frontend source.
