@@ -7,6 +7,8 @@
 FROM tomcat:8-jre8
 MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 
+ARG MAVEN_OPTS=${MAVEN_OPTS}
+
 # install build and runtime dependencies and configure Tomcat for production
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		git \
@@ -20,8 +22,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python-requests \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
-	&& rm -rf $CATALINA_HOME/webapps/*m* 
-	
+	&& rm -rf $CATALINA_HOME/webapps/*m*
+
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
@@ -37,7 +39,7 @@ COPY ./log4j.properties src/main/resources/log4j.properties
 
 # install default config files, build and install, placing the scripts jar back
 # in the target folder where import scripts expect it after cleanup
-RUN mvn -DskipTests clean package \
+RUN mvn ${MAVEN_OPTS} -DskipTests clean package \
 	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
