@@ -1,0 +1,71 @@
+#
+# Copyright (c) 2016 The Hyve B.V.
+# This code is licensed under the GNU Affero General Public License (AGPL),
+# version 3, or (at your option) any later version.
+#
+
+FROM tomcat:8-jre8
+MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
+
+# install build and runtime dependencies and configure Tomcat for production
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		git \
+		libmysql-java \
+		maven \
+		openjdk-8-jdk \
+		patch \
+		python \
+		python-jinja2 \
+		python-mysqldb \
+		python-requests \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
+	&& rm -rf $CATALINA_HOME/webapps/*m* 
+
+# include Maven configs to fetch additional Java dependencies listed there
+# starting with the dependencies of the backend projects, which change
+# significantly less often than the externally maintained frontend code
+ENV PORTAL_HOME=/cbioportal
+COPY pom.xml                                     $PORTAL_HOME/
+WORKDIR $PORTAL_HOME
+# list of subproject POM files:
+# find . -mindepth 2 -not \( -path '*/target/*' -or -path '*/frontend-cbioportal/*' \)  -name pom.xml \
+# | sed -e 's/^\.\/\(.*\)\/pom.xml$/COPY \1\/pom.xml#\1\//' | column -ts '#'
+COPY business/pom.xml                         business/
+COPY core/pom.xml                             core/
+COPY db-scripts/pom.xml                       db-scripts/
+COPY model/pom.xml                            model/
+COPY persistence/pom.xml                      persistence/
+COPY persistence/persistence-api/pom.xml      persistence/persistence-api/
+COPY persistence/persistence-mybatis/pom.xml  persistence/persistence-mybatis/
+COPY scripts/pom.xml                          scripts/
+COPY security/pom.xml                         security/
+COPY security/security-spring/pom.xml         security/security-spring/
+COPY service/pom.xml                          service/
+COPY web/pom.xml                              web/
+RUN for subproject in */.; do cd "$subproject"; mvn dependency:go-offline --fail-never; cd ..; done
+COPY portal/pom.xml                           portal/
+RUN mvn dependency:go-offline --fail-never
+
+# include the rest of the cBioPortal sources
+COPY . $PORTAL_HOME
+
+# install default config files, build and install, placing the scripts jar back
+# in the target folder where import scripts expect it after cleanup
+RUN mv ./portal.properties src/main/resources/portal.properties \
+	&& mv ./log4j.properties src/main/resources/log4j.properties \
+	&& mvn -DskipTests clean package \
+	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
+	&& mv scripts/target/scripts-*.jar /root/ \
+	&& mvn clean \
+	&& mkdir scripts/target/ \
+	&& mv /root/scripts-*.jar scripts/target/
+
+# add runtime configuration
+RUN patch $CATALINA_HOME/conf/server.xml <catalina_server.xml.patch
+RUN patch $CATALINA_HOME/conf/context.xml <catalina_context.xml.patch
+
+# add importer scripts to PATH for easy running in containers
+RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
+# TODO: fix the workdir-dependent references to '../scripts/env.pl' and do this:
+# RUN find $PWD/core/src/main/scripts/ -type f -executable \! \( -name env.pl -o -name envSimple.pl \)  -print0 | xargs -0 -- ln -st /usr/local/bin
