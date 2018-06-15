@@ -41,13 +41,14 @@ RUN mvn -DskipTests clean package \
 	&& mkdir scripts/target/ \
 	&& mv /root/scripts-*.jar scripts/target/
 
-# add runtime configuration
-COPY ./catalina_server.xml.patch /root/
-RUN patch $CATALINA_HOME/conf/server.xml </root/catalina_server.xml.patch
-COPY ./catalina_context.xml.patch /root/
-RUN patch $CATALINA_HOME/conf/context.xml </root/catalina_context.xml.patch
+# add default configuration applied by the entrypoint script
+COPY ./catalina_server.xml.patch /cbioportal/
+COPY ./catalina_context.xml.patch /cbioportal/
 
 # add importer scripts to PATH for easy running in containers
 RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
 # TODO: fix the workdir-dependent references to '../scripts/env.pl' and do this:
 # RUN find $PWD/core/src/main/scripts/ -type f -executable \! \( -name env.pl -o -name envSimple.pl \)  -print0 | xargs -0 -- ln -st /usr/local/bin
+
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]

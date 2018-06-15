@@ -1,9 +1,22 @@
 # Adjusting cBioPortal
 
 ## Customize cBioPortal configuration
-When building a Docker image, the Dockerfile adjusts configuration by copying cBioPortal configuration files `portal.properties` and `log4j.properties` to the image. To build an image that uses different settings (see the documentation on the [main properties](https://github.com/cBioPortal/cbioportal/blob/master/docs/portal.properties-Reference.md) and the [skin properties](https://github.com/cBioPortal/cbioportal/blob/master/docs/Customizing-your-instance-of-cBioPortal.md)), you can follow the steps listed below. The `log4j.properties` file can modified to change the log level.
 
-To modify the configuration for your own cBioPortal instance, please add modifications to `portal.properties` and `log4j.properties`. This file already contains several modifications for this Docker setup. The original configuration of the dockerized version of cBioPortal can be found in `portal.properties.EXAMPLE` and `log4j.properties.EXAMPLE`. To view differences between the original file and modified file, use `diff`:
+The cBioPortal server software can be configured in various ways
+to suit the needs of your particular installation
+by overriding the file `portal.properties`.
+For details, see the documentation on the
+[main properties](https://github.com/cBioPortal/cbioportal/blob/master/docs/portal.properties-Reference.md)
+and the
+[skin properties](https://github.com/cBioPortal/cbioportal/blob/master/docs/Customizing-your-instance-of-cBioPortal.md).
+The `log4j.properties` file configures the log level.
+
+The properties files included in this repository contain several tweaks likely
+to be relevant to the documented Docker setup.
+The original configuration can be found in `portal.properties.EXAMPLE` and
+`log4j.properties.EXAMPLE`.
+To view differences between the original file and modified file, use `diff`:
+
 ```
 diff portal.properties portal.properties.EXAMPLE
 ```
