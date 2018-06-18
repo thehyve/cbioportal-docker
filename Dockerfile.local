@@ -61,11 +61,10 @@ RUN mv ./portal.properties src/main/resources/portal.properties \
 	&& mkdir scripts/target/ \
 	&& mv /root/scripts-*.jar scripts/target/
 
-# add runtime configuration
-RUN patch $CATALINA_HOME/conf/server.xml <catalina_server.xml.patch
-RUN patch $CATALINA_HOME/conf/context.xml <catalina_context.xml.patch
-
 # add importer scripts to PATH for easy running in containers
 RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
 # TODO: fix the workdir-dependent references to '../scripts/env.pl' and do this:
 # RUN find $PWD/core/src/main/scripts/ -type f -executable \! \( -name env.pl -o -name envSimple.pl \)  -print0 | xargs -0 -- ln -st /usr/local/bin
+
+RUN mv docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]

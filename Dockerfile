@@ -35,20 +35,21 @@ COPY ./log4j.properties src/main/resources/log4j.properties
 # install default config files, build and install, placing the scripts jar back
 # in the target folder where import scripts expect it after cleanup
 RUN mvn -DskipTests clean package \
-	&& mv portal/target/cbioportal-*.war $CATALINA_HOME/webapps/cbioportal.war \
+	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
 	&& mkdir scripts/target/ \
 	&& mv /root/scripts-*.jar scripts/target/
-
-# add default configuration applied by the entrypoint script
-COPY ./catalina_server.xml.patch /cbioportal/
-COPY ./catalina_context.xml.patch /cbioportal/
 
 # add importer scripts to PATH for easy running in containers
 RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
 # TODO: fix the workdir-dependent references to '../scripts/env.pl' and do this:
 # RUN find $PWD/core/src/main/scripts/ -type f -executable \! \( -name env.pl -o -name envSimple.pl \)  -print0 | xargs -0 -- ln -st /usr/local/bin
 
+# add default configuration applied by the entrypoint script
+COPY ./catalina_context.xml.patch /cbioportal/
+COPY ./catalina_server.xml.patch /cbioportal/
+
 COPY docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["catalina.sh", "run"]
