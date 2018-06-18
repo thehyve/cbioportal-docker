@@ -84,7 +84,7 @@ versions of the portal code.
 ```
 docker run --rm -it --net cbio-net \
     cbioportal-image \
-    migrate_db.py -p /cbioportal/src/main/resources/portal.properties -s /cbioportal/db-scripts/src/main/resources/migration.sql
+    migrate_db.py -p /cbioportal/portal.properties -s /cbioportal/db-scripts/src/main/resources/migration.sql
 ```
 
 ### Step 5 - Configure and customise your portal ###
