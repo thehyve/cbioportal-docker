@@ -52,7 +52,7 @@ COPY . $PORTAL_HOME
 
 # install default config files, build and install, placing the scripts jar back
 # in the target folder where import scripts expect it after cleanup
-RUN cp ./portal.properties src/main/resources/portal.properties \
+RUN cp portal.properties src/main/resources/portal.properties \
 	&& mv ./log4j.properties src/main/resources/log4j.properties \
 	&& mvn -DskipTests clean package \
 	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
@@ -68,3 +68,4 @@ RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print
 
 RUN mv docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["catalina.sh", "run"]

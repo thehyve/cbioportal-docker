@@ -28,13 +28,13 @@ ENV PORTAL_HOME=/cbioportal
 RUN git clone --depth 1 -b v1.13.2 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
-# add buildtime configuration
-COPY ./portal.properties src/main/resources/portal.properties
-COPY ./log4j.properties src/main/resources/log4j.properties
+# add default configuration baked in at build-time
+COPY portal.properties $PORTAL_HOME
+COPY log4j.properties src/main/resources/log4j.properties
 
 # install default config files, build and install, placing the scripts jar back
 # in the target folder where import scripts expect it after cleanup
-RUN cp src/main/resources/portal.properties . \
+RUN cp portal.properties src/main/resources/portal.properties \
 	&& mvn -DskipTests clean package \
 	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
 	&& mv scripts/target/scripts-*.jar /root/ \
