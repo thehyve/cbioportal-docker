@@ -27,7 +27,7 @@ docker run -d --restart=always \
     -e MYSQL_USER=keycloak \
     -e MYSQL_PASSWORD=password \
     -e MYSQL_ROOT_PASSWORD=root_password \
-    mysql
+    mysql:5.7
 ```
 
 Then run the actual Keycloak server, using
@@ -49,7 +49,7 @@ docker run -d --restart=always \
     -e KEYCLOAK_USER=admin \
     -e "KEYCLOAK_PASSWORD=<admin_password_here>" \
     -e DB_VENDOR="MYSQL" \
-    jboss/keycloak
+    jboss/keycloak:3.4.3.Final
 ```
 
 Finally, configure Keycloak and cBioPortal as explained in the
