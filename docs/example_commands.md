@@ -69,25 +69,37 @@ The import command:
  metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
 ```
 
-### Running cBioPortal code from a local folder ###
+### Debugging cBioPortal ###
 
-If you have checked out (or modified) a git branch locally in `~/cbioportal`
-and you want to run or debug it, you can use the following command. Note that
-the path given to the `-v` option must be an absolute path. The mapping for
-port 8000 and the references to JPDA open a port for remote debugging software
-to attach. The image is used as a runtime environment and as a cache for
-dependencies when compiling, while the `portal.properties` file will be read
-from the source folder.
+See [the developer manual](development.md) to build images based on
+a local copy of the source code.
+
+When running the webserver, this command opens up port 8000
+for remote debugging software to attach.
 
 ```shell
 docker run --rm \
-    -p 8000:8000 \
-    -p 8080:8080 \
-    -v "$HOME"/cbioportal:/cbioportal \
-    --net=cbio-net \
     --name=cbioportal-dev \
+    --net=cbio-net \
+    -e JPDA_ADDRESS=0.0.0.0:8000
+    -p 127.0.0.1:8000:8000 \
+    -p 8080:8080 \
     cbioportal-image \
-    sh -c 'mvn -DskipTests clean install && rm -f "$CATALINA_HOME/webapps/cbioportal.war" && unzip portal/target/cbioportal*.war -d "$CATALINA_HOME/webapps/cbioportal/" && JPDA_ADDRESS=0.0.0.0:8000 exec catalina.sh jpda run'
+    catalina.sh jpda run
+```
+
+Debugging the Java components of the data loading pipeline
+presently requires applying the included patch to the code as follows.
+It will re-open the port before starting each step of the loading process.
+
+```shell
+docker run -it --rm \
+    --net cbio-net \
+    -p 127.0.0.1:8000:8000 \
+    -v "/<path_to_cbioportal-docker>/debug-loader-java.gitpatch:/mnt/debug-loader-java.gitpatch:ro" \
+    -v "$PWD/study-dir:/study:ro" \
+    cbioportal-image \
+    sh -c 'git apply /mnt/debug-loader-java.gitpatch && cbioportalImporter.py -s /study'
 ```
 
 ### Testing cBioPortal code from a GitHub branch ###
