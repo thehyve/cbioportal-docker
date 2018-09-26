@@ -3,17 +3,19 @@
 Use this command to validate a dataset in the folder `./study-dir`, connecting
 to the web API of the container `cbioportal-container`, and import it into the
 database configured in the image, saving an html report of the validation to
-`~/Desktop/report.html`.  Note that the paths given to the `-v` option must be
+`~/Desktop/report.html`. Note that the paths passed to the `-v` option must be
 absolute paths.
 
 ```shell
 docker run -it --rm --net cbio-net \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     -v "$PWD/study-dir:/study:ro" \
     -v "$HOME/Desktop:/outdir" \
     cbioportal-image \
     metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
 ```
-:warning: after importing a study, remember to restart `cbioportal-container` to see the study in the home page. Run `docker restart cbioportal-container`
+:warning: after importing a study, remember to restart `cbioportal-container`
+to see the study on the home page. Run `docker restart cbioportal-container`.
 
 #### Using cached portal side-data ####
 
@@ -21,6 +23,7 @@ In some setups the data validation step may not have direct access to the web AP
 
 ```shell
 docker run --rm --net cbio-net \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     -v "$PWD/portalinfo:/portalinfo" \
     -w /cbioportal/core/src/main/scripts \
     cbioportal-image \
@@ -31,6 +34,7 @@ Then, grant the validation/loading command access to this folder and tell the sc
 
 ```shell
 docker run -it --rm --net cbio-net \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     -v "$PWD/study-dir:/study:ro" \
     -v "$HOME/Desktop:/outdir" \
     -v "$PWD/portalinfo:/portalinfo:ro" \
@@ -50,11 +54,12 @@ background:
 
 ```shell
 docker run -d --name="importer-container" \
-  --restart=always \
-  --net=cbio-net \
-   -v "$PWD"/study-dir:/study:ro \
-   -v "$HOME"/Desktop:/outdir \
-  cbioportal-image tail -f /dev/null
+    --restart=always \
+    --net=cbio-net \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
+    -v "$PWD"/study-dir:/study:ro \
+    -v "$HOME"/Desktop:/outdir \
+    cbioportal-image tail -f /dev/null
 ```
 
 #### Step 2 ####
@@ -66,7 +71,7 @@ docker exec -it importer-container bash
 ```
 The import command:
 ```shell
- metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
+metaImport.py -u http://cbioportal-container:8080/cbioportal -s /study --html=/outdir/report.html
 ```
 
 ### Debugging cBioPortal ###
@@ -81,6 +86,7 @@ for remote debugging software to attach.
 docker run --rm \
     --name=cbioportal-dev \
     --net=cbio-net \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     -e JPDA_ADDRESS=0.0.0.0:8000
     -p 127.0.0.1:8000:8000 \
     -p 8080:8080 \
@@ -97,6 +103,7 @@ docker run -it --rm \
     --net cbio-net \
     -p 127.0.0.1:8000:8000 \
     -v "/<path_to_cbioportal-docker>/debug-loader-java.gitpatch:/mnt/debug-loader-java.gitpatch:ro" \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     -v "$PWD/study-dir:/study:ro" \
     cbioportal-image \
     sh -c 'git apply /mnt/debug-loader-java.gitpatch && cbioportalImporter.py -s /study'
@@ -114,6 +121,7 @@ docker run --rm \
     -p 8081:8080 \
     --net=cbio-net \
     --name=cbioportal-test \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     cbioportal-image \
     sh -c 'git fetch https://github.com/thehyve/cbioportal.git rc && git checkout FETCH_HEAD && mvn -DskipTests clean install && rm -f "$CATALINA_HOME/webapps/cbioportal.war" && unzip portal/target/cbioportal*.war -d "$CATALINA_HOME/webapps/cbioportal/" && exec catalina.sh run'
 ```

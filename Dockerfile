@@ -25,18 +25,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --depth 1 -b v1.16.0 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN git clone --depth 1 -b v1.16.0+backport4787 'https://github.com/thehyve/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
 #RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
 #       && git checkout commit_hash_in_branch
 
 # add buildtime configuration
-COPY ./portal.properties src/main/resources/portal.properties
 COPY ./log4j.properties src/main/resources/log4j.properties
 
-# install default config files, build and install, placing the scripts jar back
-# in the target folder where import scripts expect it after cleanup
+# build and install, placing the scripts jar back in the target folder
+# where import scripts expect it after cleanup
 RUN mvn -DskipTests clean package \
 	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
 	&& mv scripts/target/scripts-*.jar /root/ \
@@ -44,11 +43,12 @@ RUN mvn -DskipTests clean package \
 	&& mkdir scripts/target/ \
 	&& mv /root/scripts-*.jar scripts/target/
 
-# add runtime configuration
+# add runtime plumbing to Tomcat config:
+# - make cBioPortal honour db config in portal.properties
+RUN echo 'CATALINA_OPTS="$CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
+# - tweak server-wide config file
 COPY ./catalina_server.xml.patch /root/
 RUN patch $CATALINA_HOME/conf/server.xml </root/catalina_server.xml.patch
-COPY ./catalina_context.xml.patch /root/
-RUN patch $CATALINA_HOME/conf/context.xml </root/catalina_context.xml.patch
 
 # add importer scripts to PATH for easy running in containers
 RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin

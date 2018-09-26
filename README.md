@@ -1,4 +1,4 @@
-# cbioportal-docker @ The Hyve
+# cbioportal-docker @ The Hyve #
 
 The [cBioPortal](https://github.com/cBioPortal/cbioportal) project documents a setup to deploy a cBioPortal server using Docker, in [this section of the documentation](https://cbioportal.readthedocs.io/en/latest/#docker). As cBioPortal traditionally does not distinguish between build-time and deploy-time configuration, the setup documented there builds the application at runtime, and suggests running auxiliary commands in the same container as the webserver. The above approach may sacrifice a few advantages of using Docker by going against some of its idioms. For this reason, the project you are currently looking at documents an alternative setup, which builds a ready-to-run cBioPortal application into a Docker image.
 
@@ -58,28 +58,20 @@ occurs, make sure to check it. A common cause is pointing the `-v` parameters
 above to folders or files that do not exist.
 
 ### Step 3 - Build the Docker image containing cBioPortal ###
-Checkout the repository, enter the directory and run build the image.
-
-```
-git clone https://github.com/thehyve/cbioportal-docker.git
-cd cbioportal-docker
-docker build -t cbioportal-image .
-```
-
-Alternatively, if you do not wish to change anything in the Dockerfile or the properties, you can run:
+Run the command below to build the latest version.
 
 ```
 docker build -t cbioportal-image https://github.com/thehyve/cbioportal-docker.git
 ```
 
-If you want to change any variable defined in portal.properties,
-have a look [here](docs/adjusting_configuration.md#customize-cbioportal-configuration).
-If you want to build an image based on a different branch, you can
-read [this](docs/adjusting_configuration.md#use-a-different-cbioportal-branch). And to
-Dockerize a Keycloak authentication service alongside cBioPortal,
-see [this file](docs/using-keycloak.md).
+If you want to build an image based on a different branch, you can read
+[this](docs/adjusting_configuration.md#use-a-different-cbioportal-branch).
 
 ### Step 4 - Update the database schema ###
+
+Obtain the [`portal.properties`](https://github.com/thehyve/cbioportal-docker/blob/master/portal.properties).
+configuration file for the Docker setup from this repository.
+
 Update the seeded database schema to match the cBioPortal version
 in the image, by running the following command. Note that this will
 most likely make your database irreversibly incompatible with older
@@ -87,15 +79,25 @@ versions of the portal code.
 
 ```
 docker run --rm -it --net cbio-net \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     cbioportal-image \
-    migrate_db.py -p /cbioportal/src/main/resources/portal.properties -s /cbioportal/db-scripts/src/main/resources/migration.sql
+    migrate_db.py -p /cbioportal/portal.properties -s /cbioportal/db-scripts/src/main/resources/migration.sql
 ```
 
 ### Step 5 - Run the cBioPortal web server ###
+
+Add any cBioPortal configuration in `portal.properties` as appropriate—see
+the documentation on the
+[main properties](https://github.com/cBioPortal/cbioportal/blob/master/docs/portal.properties-Reference.md)
+and the
+[skin properties](https://github.com/cBioPortal/cbioportal/blob/master/docs/Customizing-your-instance-of-cBioPortal.md).
+Then start the web server as follows.
+
 ```
 docker run -d --restart=always \
     --name=cbioportal-container \
     --net=cbio-net \
+    -v /<path_to_config_file>/portal.properties:/cbioportal/portal.properties:ro \
     -e CATALINA_OPTS='-Xms2g -Xmx4g' \
     -p 8081:8080 \
     cbioportal-image
@@ -109,7 +111,7 @@ MacOS or Windows, make sure to take a look at [these
 notes](docs/notes-for-non-linux.md) to allocate more memory for the
 virtual machine in which all Docker processes are running.
 
-cBioPortal can now be reached at http://localhost:8081/cbioportal/
+cBioPortal can now be reached at <http://localhost:8081/cbioportal/>
 
 Activity of Docker containers can be seen with:
 ```
@@ -117,12 +119,14 @@ docker ps -a
 ```
 
 ## Data loading & more commands ##
-
 For more uses of the cBioPortal image, see [this file](docs/example_commands.md)
 
 To build images from development source
 rather than stable releases or snapshots, see
 [development.md](docs/development.md).
+
+To Dockerize a Keycloak authentication service alongside cBioPortal,
+see [this file](docs/using-keycloak.md).
 
 ## Uninstalling cBioPortal ##
 First we stop the Docker containers.
