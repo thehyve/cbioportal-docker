@@ -4,6 +4,12 @@
 # version 3, or (at your option) any later version.
 #
 
+#
+# Dockerfile to test local, unreleased source code in Docker images.
+#
+# See https://github.com/thehyve/cbioportal-docker/blob/master/docs/development.md
+#
+
 FROM tomcat:8-jre8
 MAINTAINER Fedde Schaeffer <fedde@thehyve.nl>
 
