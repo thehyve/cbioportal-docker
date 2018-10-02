@@ -39,17 +39,16 @@ sure to choose a strong administrator password.
 
 The command below uses the default values for `MYSQL_DATABASE`, `MYSQL_USER` and `MYSQL_PASSWORD` (listed in the command above). If you wish to change these credentials, specify them in the command below. For instance, if `MYSQL_USER` in the database container is `user`, you need to add `-e MYSQL_USER=user`.
 
-```
+```sh
 docker run -d --restart=always \
     --name=cbiokc \
     --net=kcnet \
     -p 8180:8080 \
-    -e MYSQL_PORT_3306_TCP_ADDR=kcdb \
-    -e MYSQL_PORT_3306_TCP_PORT=3306 \
+    -e DB_VENDOR=mysql \
+    -e DB_ADDR=kcdb \
     -e KEYCLOAK_USER=admin \
     -e "KEYCLOAK_PASSWORD=<admin_password_here>" \
-    -e DB_VENDOR="MYSQL" \
-    jboss/keycloak:3.4.3.Final
+    jboss/keycloak:4.5.0.Final
 ```
 
 Finally, configure Keycloak and cBioPortal as explained in the
