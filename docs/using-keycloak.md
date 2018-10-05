@@ -58,3 +58,11 @@ Click [here](adjusting_configuration.md) for a general
 explanation on how to adjust portal properties used when building a
 Docker image for cBioPortal, and remember to specify port 8180 for the
 Keycloak server, wherever the guide says 8080.
+
+When starting the cBioPortal web server with the new configuration, instead of
+modifying Tomcat config files, include the `-Dauthenticate=saml` flag in the
+`CATALINA_OPTS` argument on the command line:
+
+```
+    -e CATALINA_OPTS='-Xms2g -Xmx4g -Dauthenticate=saml' \
+```

@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --depth 1 -b v1.16.0+backport4787 'https://github.com/thehyve/cbioportal.git' $PORTAL_HOME
+RUN git clone --depth 1 -b v1.16.0+backport4787-4917 'https://github.com/thehyve/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
 #RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
@@ -45,7 +45,7 @@ RUN mvn -DskipTests clean package \
 
 # add runtime plumbing to Tomcat config:
 # - make cBioPortal honour db config in portal.properties
-RUN echo 'CATALINA_OPTS="$CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
+RUN echo 'CATALINA_OPTS="-Dauthenticate=false $CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
 # - tweak server-wide config file
 COPY ./catalina_server.xml.patch /root/
 RUN patch $CATALINA_HOME/conf/server.xml </root/catalina_server.xml.patch

@@ -63,7 +63,7 @@ RUN mv ./portal.properties src/main/resources/portal.properties \
 
 # add runtime plumbing to Tomcat config:
 # - make cBioPortal honour db config in portal.properties
-RUN echo 'CATALINA_OPTS="$CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
+RUN echo 'CATALINA_OPTS="-Dauthenticate=false $CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
 # - tweak server-wide config file
 RUN patch $CATALINA_HOME/conf/server.xml <catalina_server.xml.patch
 
