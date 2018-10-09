@@ -67,9 +67,11 @@ RUN mv ./portal.properties src/main/resources/portal.properties \
 	&& mkdir scripts/target/ \
 	&& mv /root/scripts-*.jar scripts/target/
 
-# add runtime configuration
+# add runtime plumbing to Tomcat config:
+# - make cBioPortal honour db config in portal.properties
+RUN echo 'CATALINA_OPTS="-Dauthenticate=false $CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
+# - tweak server-wide config file
 RUN patch $CATALINA_HOME/conf/server.xml <catalina_server.xml.patch
-RUN patch $CATALINA_HOME/conf/context.xml <catalina_context.xml.patch
 
 # add importer scripts to PATH for easy running in containers
 RUN find $PWD/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
