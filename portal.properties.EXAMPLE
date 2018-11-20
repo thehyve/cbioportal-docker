@@ -26,7 +26,7 @@ skin.documentation.baseurl=https://raw.githubusercontent.com/cBioPortal/cbioport
 skin.documentation.markdown=true
 skin.documentation.faq=FAQ.md
 skin.documentation.about=About-Us.md
-skin.documentation.skin.news=News.md
+skin.documentation.news=News.md
 skin.documentation.oql=Onco-Query-Language.md
 
 # setting controlling the logos
@@ -184,9 +184,6 @@ recache_study_after_update=false
 # WARNING: do not use session service with -Dauthenticate=false
 #  either use authentication or change to -Dauthenticate=noauthsessionservice
 session.service.url=
-# Only allow requests from here:
-#  e.g. session.service.origin=http://dashi-dev.cbio.mskcc.org:8080
-session.service.origin=*
 
 # disabled tabs, | delimited
 # possible values: cancer_types_summary, mutual_exclusivity, plots, mutations, co_expression, enrichments, survival, network, download, bookmark, IGV
