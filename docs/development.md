@@ -12,10 +12,10 @@ build an image based on that folder and Dockerfile.local:
 cp Dockerfile.local *.properties *.patch ~/git/cbioportal
 cp dockerignore ~/git/cbioportal/.dockerignore
 cd ~/git/cbioportal
-docker build -f Dockerfile.local -t cbioportal:my-local-source-dir .
+docker build -f Dockerfile.local -t cbioportal:feature-name .
 ```
 
-And then, whenever you've changed the source code (or configuration), you can
+_feature name_ may be replaced by a name that describes the current branch. And then, whenever you've changed the source code (or configuration), you can
 build a new image by re-running the build command. This will not automatically
 remove the old image; use `docker image ls` and `docker image rm` if you no
 longer need it.
