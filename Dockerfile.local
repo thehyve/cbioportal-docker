@@ -60,7 +60,7 @@ COPY . $PORTAL_HOME
 # in the target folder where import scripts expect it after cleanup
 RUN mv ./portal.properties src/main/resources/portal.properties \
 	&& mv ./log4j.properties src/main/resources/log4j.properties \
-	&& mvn -DskipTests clean package \
+	&& mvn -Pdefault,heroku -DskipTests clean package \
 	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
