@@ -28,8 +28,8 @@ ENV PORTAL_HOME=/cbioportal
 RUN git clone --depth 1 -b v1.17.1+backport4787-4917-5057 'https://github.com/thehyve/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
-#RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
-#       && git checkout commit_hash_in_branch
+RUN git fetch --depth 1 https://github.com/inodb/cbioportal.git generate-pom-version-from-git-commit \
+       && git checkout 51953ba84924d9e420acb4ef5a0eb5f8d85b02a1
 
 # add buildtime configuration
 COPY ./log4j.properties src/main/resources/log4j.properties
@@ -37,7 +37,7 @@ COPY ./log4j.properties src/main/resources/log4j.properties
 # build and install, placing the scripts jar back in the target folder
 # where import scripts expect it after cleanup
 RUN mvn -DskipTests clean package \
-	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
+	&& unzip portal/target/cbioportal*.war -d $CATALINA_HOME/webapps/cbioportal \
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
 	&& mkdir scripts/target/ \
