@@ -48,7 +48,7 @@ docker run -d --restart=always \
     -e DB_ADDR=kcdb \
     -e KEYCLOAK_USER=admin \
     -e "KEYCLOAK_PASSWORD=<admin_password_here>" \
-    jboss/keycloak:4.5.0.Final
+    jboss/keycloak:4.8.3.Final
 ```
 
 Finally, configure Keycloak and cBioPortal as explained in the
