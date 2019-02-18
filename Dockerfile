@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --depth 1 -b v1.18.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN git clone --depth 1 -b v2.0.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
 #RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
@@ -36,8 +36,8 @@ COPY ./log4j.properties src/main/resources/log4j.properties
 
 # build and install, placing the scripts jar back in the target folder
 # where import scripts expect it after cleanup
-RUN mvn -DskipTests clean package \
-	&& unzip portal/target/cbioportal-*.war -d $CATALINA_HOME/webapps/cbioportal \
+RUN mvn -DskipTests clean install \
+	&& unzip portal/target/cbioportal.war -d $CATALINA_HOME/webapps/cbioportal \
 	&& mv scripts/target/scripts-*.jar /root/ \
 	&& mvn clean \
 	&& mkdir scripts/target/ \
