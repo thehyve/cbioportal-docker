@@ -84,7 +84,24 @@ docker run --rm -it --net cbio-net \
     migrate_db.py -p /cbioportal/portal.properties -s /cbioportal/db-scripts/src/main/resources/migration.sql
 ```
 
-### Step 5 - Run the cBioPortal web server ###
+### Step 5 - Run Session Service containers
+First, create the mongoDB database:
+
+```
+docker run -d --name=mongoDB --net=cbio-net \
+    -e MONGO_INITDB_DATABASE=session_service \
+    mongo:4.0
+```
+
+Finally, create a container for the Session Service, adding the link to the mongoDB database using `-Dspring.data.mongodb.uri`:
+
+```
+docker run -d --name=cbio-session-service --net=cbio-net -p 8084:8080 \
+    -e JAVA_OPTS="-Dspring.data.mongodb.uri=mongodb://mongoDB:27017/session-service" \
+    thehyve/cbioportal-session-service:cbiov2.1.0
+```
+
+### Step 6 - Run the cBioPortal web server ###
 
 Add any cBioPortal configuration in `portal.properties` as appropriate—see
 the documentation on the

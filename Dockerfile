@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		python3-jinja2 \
 		python3-mysqldb \
 		python3-requests \
+		python3-yaml \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& ln -s /usr/share/java/mysql-connector-java.jar "$CATALINA_HOME"/lib/ \
 	&& rm -rf $CATALINA_HOME/webapps/*m* 
@@ -25,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # fetch the cBioPortal sources and version control metadata
 ENV PORTAL_HOME=/cbioportal
-RUN git clone --depth 1 -b v2.0.1 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
+RUN git clone --depth 1 -b v2.1.0 'https://github.com/cBioPortal/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
 #RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
@@ -45,7 +46,8 @@ RUN mvn -DskipTests clean install \
 
 # add runtime plumbing to Tomcat config:
 # - make cBioPortal honour db config in portal.properties
-RUN echo 'CATALINA_OPTS="-Dauthenticate=false $CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
+# temporarily add session.service.url here since it does not work in portal.properties
+RUN echo 'CATALINA_OPTS="-Dauthenticate=false -Dsession.service.url=http://cbio-session-service:8080/api/sessions/main_session/ $CATALINA_OPTS -Ddbconnector=dbcp"' >>$CATALINA_HOME/bin/setenv.sh
 # - tweak server-wide config file
 COPY ./catalina_server.xml.patch /root/
 RUN patch $CATALINA_HOME/conf/server.xml </root/catalina_server.xml.patch
