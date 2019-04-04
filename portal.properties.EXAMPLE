@@ -62,6 +62,7 @@ skin.login.saml.registration_html=Sign in with MSK
 skin.right_nav.show_data_sets=true
 skin.right_nav.show_examples=true
 skin.right_nav.show_testimonials=true
+skin.right_nav.show_whats_new=true
 
 # settings controlling what to show in the right navigation bar
 skin.study_view.link_text=To build your own case set, try out our enhanced Study View.
@@ -163,8 +164,6 @@ broad.bam.checking.url=
 include_networks=true
 pathway_commons.url=http://www.pathwaycommons.org/pc2
 
-# bitly, please use your bitly user and apiKey
-bitly.url=http://api.bit.ly/shorten?login=[bitly.user]&apiKey=[bitly.apiKey]&
 # the new API uses the v3 of bitly API, and a java library to make the API call, so you only need to provide the access token  
 bitly.access.token=
 
@@ -184,6 +183,9 @@ recache_study_after_update=false
 # WARNING: do not use session service with -Dauthenticate=false
 #  either use authentication or change to -Dauthenticate=noauthsessionservice
 session.service.url=
+# if basic authentication is enabled on session service one should set:
+# session.service.user=user
+# session.service.password=pass
 
 # disabled tabs, | delimited
 # possible values: cancer_types_summary, mutual_exclusivity, plots, mutations, co_expression, enrichments, survival, network, download, bookmark, IGV
