@@ -1,6 +1,12 @@
 # cbioportal-docker @ The Hyve #
 
-The [cBioPortal](https://github.com/cBioPortal/cbioportal) project documents a setup to deploy a cBioPortal server using Docker, in [this section of the documentation](https://cbioportal.readthedocs.io/en/latest/#docker). As cBioPortal traditionally does not distinguish between build-time and deploy-time configuration, the setup documented there builds the application at runtime, and suggests running auxiliary commands in the same container as the webserver. The above approach may sacrifice a few advantages of using Docker by going against some of its idioms. For this reason, the project you are currently looking at documents an alternative setup, which builds a ready-to-run cBioPortal application into a Docker image.
+The [cBioPortal](https://github.com/cBioPortal/cbioportal) project documents a setup to deploy a cBioPortal server using Docker, in [this section of the documentation](https://cbioportal.readthedocs.io/en/latest/#docker).
+As cBioPortal traditionally did not distinguish between build-time and deploy-time configuration,
+the setup documented there builds the application at runtime,
+and suggests running auxiliary commands in the same container as the webserver.
+The above approach may sacrifice a few advantages of using Docker by going against some of its idioms.
+For this reason, the project you are currently looking at documents an alternative setup,
+which builds a ready-to-run cBioPortal application into a Docker image.
 
 To get started, download and install Docker from www.docker.com.
 
