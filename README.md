@@ -102,7 +102,7 @@ docker run -d --name=mongoDB --net=cbio-net \
 Finally, create a container for the Session Service, adding the link to the mongoDB database using `-Dspring.data.mongodb.uri`:
 
 ```
-docker run -d --name=cbio-session-service --net=cbio-net -p 8084:8080 \
+docker run -d --name=cbio-session-service --net=cbio-net \
     -e JAVA_OPTS="-Dspring.data.mongodb.uri=mongodb://mongoDB:27017/session-service" \
     thehyve/cbioportal-session-service:cbiov2.1.0
 ```
