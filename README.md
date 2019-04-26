@@ -22,8 +22,7 @@ docker network create cbio-net
 
 ### Step 2 - Run mysql with seed database ###
 Start a MySQL server. The command below stores the database in a folder named
-`/<path_to_save_mysql_db>/db_files/`. This should be an absolute path, that
-does *not* point to a directory already containing database files.
+`/<path_to_save_mysql_db>/db_files/`. This should be an absolute path.
 
 ```
 docker run -d --restart=always \
