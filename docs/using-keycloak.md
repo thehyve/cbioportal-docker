@@ -3,7 +3,7 @@
 This guide describes a way to Dockerise Keycloak along with
 cBioPortal, for authentication as described in
 the
-[cBioPortal documentation](https://cbioportal.readthedocs.io/en/latest/Authenticating-and-Authorizing-Users-via-keycloak.html#introduction).
+[cBioPortal documentation](https://docs.cbioportal.org/2.2-authorization-and-authentication/authenticating-and-authorizing-users-via-keycloak#introduction).
 
 First, create an isolated network in which the Keycloak and MySQL
 servers can talk to one another.
@@ -52,7 +52,7 @@ docker run -d --restart=always \
 ```
 
 Finally, configure Keycloak and cBioPortal as explained in the
-[cBioPortal documentation](https://cbioportal.readthedocs.io/en/latest/Authenticating-and-Authorizing-Users-via-keycloak.html#configure-keycloak-to-authenticate-your-cbioportal-instance).
+[cBioPortal documentation](https://docs.cbioportal.org/2.2-authorization-and-authentication/authenticating-and-authorizing-users-via-keycloak#configure-keycloak-to-authenticate-your-cbioportal-instance).
 Click [here](adjusting_configuration.md) for a general
 explanation on how to adjust portal properties used when building a
 Docker image for cBioPortal, and remember to specify port 8180 for the
