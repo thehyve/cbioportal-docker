@@ -29,8 +29,8 @@ ENV PORTAL_HOME=/cbioportal
 RUN git clone --depth 1 -b v2.1.1+backport6012 'https://github.com/thehyve/cbioportal.git' $PORTAL_HOME
 WORKDIR $PORTAL_HOME
 
-#RUN git fetch --depth 1 https://github.com/thehyve/cbioportal.git my_development_branch \
-#       && git checkout commit_hash_in_branch
+RUN git fetch --depth 1 https://github.com/cbioportal/cbioportal.git release-3.0.0 \
+       && git checkout a466ac018121c432d0f5c202d33cb3105fab3060
 
 # add buildtime configuration
 COPY ./log4j.properties src/main/resources/log4j.properties
