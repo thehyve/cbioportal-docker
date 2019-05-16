@@ -16,8 +16,13 @@ Never use a mutable ref such as a branch name,
 as that will cause headaches reproducing what you did on another machine,
 and caching build steps on the same machine.
 
-Fetch the latest base image with `docker pull tomcat:8-jre8`
+Fetch the latest base image with
+```
+docker pull tomcat:8-jre8
+```
 and build an image.
+
+### Reviewing portal.properties customisations
 
 Save the differences between the upstream and customised config files:
 ```sh
@@ -41,6 +46,8 @@ patch portal.properties <portal.properties.patch
 ```
 
 Clean up the copycat container and the patch file.
+
+### Testing the portal
 
 Fetch the latest compatible MySQL image:
 ```sh
