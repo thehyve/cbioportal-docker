@@ -1,3 +1,5 @@
+:warning: This repository is not maintained anymore. For an up to date Dockerized version of cBioPortal, check: https://github.com/cBioPortal/cbioportal/tree/master/docs/docker.
+
 # cbioportal-docker @ The Hyve #
 
 The [cBioPortal](https://github.com/cBioPortal/cbioportal) project
