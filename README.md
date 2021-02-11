@@ -159,12 +159,16 @@ First we stop the Docker containers.
 ```
 docker stop cbioDB
 docker stop cbioportal-container
+docker stop mongoDB
+docker stop cbio-session-service
 ```
 
 Then we remove the Docker containers.
 ```
 docker rm cbioDB
 docker rm cbioportal-container
+docker rm mongoDB
+docker rm cbio-session-service
 ```
 
 Cached Docker images can be seen with:
@@ -176,4 +180,6 @@ Finally we remove the cached Docker images.
 ```
 docker rmi mysql:5.7
 docker rmi cbioportal-image
+docker rmi mongo:4.0
+docker rmi thehyve/cbioportal-session-service:cbiov2.1.0
 ```
